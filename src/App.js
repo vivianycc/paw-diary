@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
-import HomePage from "./components/HomePage";
-import FoodPage from "./components/FoodPage";
+import HomePage from "./pages/HomePage";
+import FoodPage from "./pages/FoodPage";
+import Nav from "./components/Nav";
 function App() {
   return (
     <div className="App">
@@ -8,6 +9,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/foods" element={<FoodPage />} />
       </Routes>
+      <Nav />
     </div>
   );
 }
