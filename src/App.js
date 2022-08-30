@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import FoodPage from "./pages/FoodPage";
+import StatsPage from "./pages/StatsPage";
 import FoodSearch from "./pages/FoodSearch";
 import CreateFoodPage from "./pages/CreateFoodPage";
 import Nav from "./components/Nav";
@@ -24,14 +25,16 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/foods" element={<FoodPage foods={foods} />} />
-        <Route path="/foods/create" element={<CreateFoodPage />} />
-        <Route path="/foods/search" element={<FoodSearch foods={foods} />} />
+        <Route path="/" element={<HomePage />}>
+          <Route path="foods" element={<FoodPage foods={foods} />} />
+          <Route path="stats" element={<StatsPage />} />
+        </Route>
+        <Route path="foods/create" element={<CreateFoodPage />} />
         <Route
           path="/foods/add"
           element={<AddFoodPage foods={foods} addFoodHandler={setFoods} />}
         />
+        <Route path="foods/search" element={<FoodSearch foods={foods} />} />
       </Routes>
     </div>
   );

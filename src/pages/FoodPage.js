@@ -4,14 +4,11 @@ import Nav from "../components/Nav";
 import IconButton from "../components/IconButton";
 import { Plus, Search } from "react-feather";
 import { Link } from "react-router-dom";
-import { Drawer, Input, Modal } from "@geist-ui/core";
+import { Drawer, Input, Modal, Tabs } from "@geist-ui/core";
 import FoodItem from "../components/FoodItem";
 
 const StyledFoodPage = styled.div`
-  height: 100vh;
-  padding: 32px;
-  background-color: var(--neutral-100);
-
+  padding-top: 32px;
   .items {
     height: 100%;
     padding-bottom: 128px;
@@ -35,19 +32,36 @@ export default function FoodPage(props) {
   };
   return (
     <StyledFoodPage>
-      <h1>Food</h1>
-      <div className="items">
-        {props.foods.map((food) => (
-          <FoodItem
-            key={food.id}
-            {...food}
-            onClick={() => {
-              setSelectedFood(food);
-              setShowModal(true);
-            }}
-          />
-        ))}
-      </div>
+      <h1>食物目錄</h1>
+      <Tabs initialValue="1" hideDivider>
+        <Tabs.Item label="全部" value="1">
+          <div className="items">
+            {props.foods.map((food) => (
+              <FoodItem
+                key={food.id}
+                {...food}
+                onClick={() => {
+                  setSelectedFood(food);
+                  setShowModal(true);
+                }}
+              />
+            ))}
+          </div>
+        </Tabs.Item>
+        <Tabs.Item label="主食" value="2">
+          目前沒有項目
+        </Tabs.Item>
+        <Tabs.Item label="副食" value="3">
+          目前沒有項目
+        </Tabs.Item>
+        <Tabs.Item label="零食" value="4">
+          目前沒有項目
+        </Tabs.Item>
+        <Tabs.Item label="保健品" value="5">
+          目前沒有項目
+        </Tabs.Item>
+      </Tabs>
+
       {selectedFood && (
         <Modal visible={showModal} onClose={closeHandler}>
           <Modal.Subtitle>{selectedFood.food.brand}</Modal.Subtitle>
@@ -70,7 +84,6 @@ export default function FoodPage(props) {
           <Input icon={<Search />} placeholder="搜尋食物名稱" />
         </Link>
       </Drawer>
-
       <Nav />
     </StyledFoodPage>
   );
