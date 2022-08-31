@@ -30,3 +30,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+/* --   Override Geist Component Styles  -- */
+
+.tabs header .scroll-container {
+  padding-left: 0;
+}
+
+.tabs header .scroll-container .tab {
+  font-size: 16px;
+}
