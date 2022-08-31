@@ -5,14 +5,12 @@ import FoodPage from "./pages/FoodPage";
 import StatsPage from "./pages/StatsPage";
 import FoodSearch from "./pages/FoodSearch";
 import CreateFoodPage from "./pages/CreateFoodPage";
-import Nav from "./components/Nav";
 import AddFoodPage from "./pages/AddFoodPage";
 function App() {
   const [foods, setFoods] = useState([]);
 
   useEffect(() => {
     const foods = JSON.parse(localStorage.getItem("foods"));
-    console.log(foods);
     if (foods.length) {
       setFoods(foods);
     }

@@ -135,28 +135,6 @@ function getDaysAgo(days) {
   );
   return arr;
 }
-function CustomLabel({ x, y, stroke, value, width }) {
-  if (value) {
-    // No label if there is a value. Let the cell handle it.
-    return null;
-  }
-
-  return (
-    <text
-      x={x}
-      y={y}
-      // Move slightly above axis
-      dy={-10}
-      // Center text
-      dx={width / 2}
-      fill={stroke}
-      fontSize={20}
-      textAnchor="middle"
-    >
-      N/A
-    </text>
-  );
-}
 
 const StyledStatsPage = styled.div`
   padding-top: 32px;
@@ -164,12 +142,7 @@ const StyledStatsPage = styled.div`
 const RenderLineChart = ({ data, dataKey }) => (
   <ResponsiveContainer width="100%" height={300}>
     <LineChart data={data} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
-      <Line
-        type="monotone"
-        dataKey={dataKey}
-        stroke="#8884d8"
-        label={<CustomLabel />}
-      />
+      <Line type="monotone" dataKey={dataKey} stroke="#8884d8" />
       <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
       <XAxis
         interval="preserveStart"

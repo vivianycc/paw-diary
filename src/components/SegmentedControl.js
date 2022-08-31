@@ -42,10 +42,6 @@ export default function SegmentedControl({
   callback,
   defaultIndex = 0,
 }) {
-  // segment: {
-  //     label: 'Complete',
-  //     value: 'complete',
-  //   },
   const [activeIndex, setActiveIndex] = useState(defaultIndex);
   const onInputChange = (value, index) => {
     setActiveIndex(index);
