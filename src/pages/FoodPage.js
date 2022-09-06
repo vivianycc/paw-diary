@@ -1,11 +1,11 @@
 import { useState } from "react";
 import styled from "styled-components";
 import Nav from "../components/Nav";
-import IconButton from "../components/IconButton";
-import { Plus, Search } from "react-feather";
+import { Search } from "react-feather";
 import { Link } from "react-router-dom";
 import { Drawer, Input, Modal, Tabs } from "@geist-ui/core";
 import FoodItem from "../components/FoodItem";
+import ActionButton from "../components/ActionButton";
 
 const StyledFoodPage = styled.div`
   padding-top: 32px;
@@ -14,11 +14,6 @@ const StyledFoodPage = styled.div`
     padding-bottom: 128px;
     overflow: scroll;
   }
-`;
-const StyledIconButton = styled(IconButton)`
-  position: fixed;
-  bottom: 128px;
-  right: 32px;
 `;
 
 export default function FoodPage(props) {
@@ -72,9 +67,7 @@ export default function FoodPage(props) {
         </Modal>
       )}
 
-      <StyledIconButton size={56} onClick={() => setShowDrawer(true)}>
-        <Plus />
-      </StyledIconButton>
+      <ActionButton onClick={() => setShowDrawer(true)} />
       <Drawer
         visible={showDrawer}
         onClose={() => setShowDrawer(false)}

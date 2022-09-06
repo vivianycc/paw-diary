@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { Input } from "@geist-ui/core";
 import { Search, ArrowLeft } from "react-feather";
@@ -47,6 +47,7 @@ export default function FoodSearch(props) {
           ) {
             return food;
           }
+          return food;
         }).map((food) => {
           if (foodAdded.includes(food.id)) {
             return <SearchResultItem {...food} key={food.id} disabled={true} />;

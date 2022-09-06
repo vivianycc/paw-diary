@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Textarea, Rating, Button } from "@geist-ui/core";
+import { Textarea, Rating } from "@geist-ui/core";
 
 export default function AddFoodPage(props) {
   const { state } = useLocation();
