@@ -30,6 +30,20 @@ function App() {
     },
   ]);
 
+  const [currentPet, setCurrentPet] = useState({
+    name: "canele",
+    info: {
+      species: "cat",
+      breed: "mix",
+      birthday: "2020/10/15",
+      weight: 4.0,
+      photoUrl: "...",
+      neutered: true, //結紮
+      sex: "f",
+      chipNum: 1234,
+    },
+  });
+
   useEffect(() => {
     const foods = JSON.parse(localStorage.getItem("foods"));
     if (foods.length) {

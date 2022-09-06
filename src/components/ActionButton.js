@@ -4,7 +4,7 @@ import { Plus } from "react-feather";
 
 const StyledIconButton = styled(IconButton)`
   position: fixed;
-  bottom: 128px;
+  bottom: 104px;
   right: 32px;
 `;
 

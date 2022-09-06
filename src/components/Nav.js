@@ -6,7 +6,7 @@ import styled from "styled-components";
 const StyledNav = styled.nav`
   margin: 0 32px;
   position: fixed;
-  bottom: 60px;
+  bottom: 32px;
   left: 0;
   right: 0;
   ul {

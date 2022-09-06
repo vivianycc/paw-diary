@@ -8,11 +8,22 @@ import FoodItem from "../components/FoodItem";
 import ActionButton from "../components/ActionButton";
 
 const StyledFoodPage = styled.div`
+  height: 100%;
   padding-top: 32px;
   .items {
     height: 100%;
     padding-bottom: 128px;
     overflow: scroll;
+  }
+  .tabs.food-tabs {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .content {
+    flex: 1;
+    overflow: scroll;
+    padding-bottom: 104px;
   }
 `;
 
@@ -23,12 +34,11 @@ export default function FoodPage(props) {
   const closeHandler = (event) => {
     setShowModal(false);
     setSelectedFood(null);
-    console.log("closed");
   };
   return (
     <StyledFoodPage>
       <h1>食物目錄</h1>
-      <Tabs initialValue="1" hideDivider>
+      <Tabs initialValue="1" hideDivider className="food-tabs">
         <Tabs.Item label="全部" value="1">
           <div className="items">
             {props.foods.map((food) => (

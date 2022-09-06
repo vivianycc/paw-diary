@@ -9,6 +9,7 @@ import CatImg2 from "../assets/cat2.jpeg";
 const StyledPage = styled.div`
   height: 100vh;
   padding: 32px;
+  overflow: hidden;
   background-color: var(--neutral-100);
 `;
 const StyledCurrentPet = styled.div`
