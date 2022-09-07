@@ -7,7 +7,7 @@ export default function AddFoodPage(props) {
   const navigate = useNavigate();
   const { brand } = state;
   const [rating, setRating] = useState(0);
-  const [ratingLocked, setRatingLocked] = useState(false);
+  const [, setRatingLocked] = useState(false);
   const [comment, setComment] = useState("");
 
   const handleSubmit = () => {

@@ -1,67 +1,85 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Nav from "../components/Nav";
 import { Outlet } from "react-router-dom";
-import { Avatar } from "@geist-ui/core";
-import CatImg1 from "../assets/cat1.jpeg";
-import CatImg2 from "../assets/cat2.jpeg";
+import { Avatar, Drawer } from "@geist-ui/core";
+import PetItem from "../components/PetItem";
 
 const StyledPage = styled.div`
   height: 100vh;
   padding: 32px;
   overflow: hidden;
   background-color: var(--neutral-100);
-`;
-const StyledCurrentPet = styled.div`
-  display: flex;
-  align-items: center;
-  .current-pet-avatar.avatar {
-    height: 48px;
-    width: 48px;
+
+  .pet-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
-  span {
-    display: block;
-    margin-left: 16px;
+  .current-pet {
+    padding: 0;
   }
-  .current-pet-name {
-    margin-bottom: 4px;
-    font-size: 16px;
-    color: var(--neutral-700);
-  }
-  .current-pet-info {
-    font-size: 14px;
-    color: var(--neutral-500);
-  }
-  .avatar-group.other-pet-avatar {
-    margin-left: auto;
+  .pet-menu {
+    cursor: pointer;
+    outline: none;
+    border: none;
   }
 `;
 
-const CurrentPet = ({
-  name = "Canele",
-  age = "13 months",
-  weight = "4.0kg",
-}) => {
+const PetMenu = ({ currentPet, pets }) => {
+  function getOtherPetsPhoto() {
+    let otherPets = [];
+    for (let pet in pets) {
+      if (pet !== currentPet) {
+        otherPets.push(pets[pet].info.photoUrl);
+      }
+    }
+    return otherPets;
+  }
+  const avatars = getOtherPetsPhoto();
   return (
-    <StyledCurrentPet>
-      <Avatar src={CatImg1} className="current-pet-avatar" />
-      <div>
-        <span className="current-pet-name">{name}</span>
-        <span className="current-pet-info">{`${age} • ${weight}`}</span>
-      </div>
-      <Avatar.Group className="other-pet-avatar">
-        <Avatar src={CatImg2} stacked />
-        <Avatar src={CatImg1} stacked />
+    <button className="pet-menu">
+      <Avatar.Group>
+        {avatars.map((url) => (
+          <Avatar src={url} stacked />
+        ))}
       </Avatar.Group>
-    </StyledCurrentPet>
+    </button>
   );
 };
-export default function HomePage() {
+export default function HomePage(props) {
+  const [showDrawer, setShowDrawer] = useState(false);
+  const { pets, switchPet, currentPet } = props;
+  const handleCurrentPet = (pet) => {
+    setShowDrawer(false);
+    switchPet(currentPet, pet);
+  };
+
+  const renderPets = () => {
+    let arr = [];
+    for (let pet in pets) {
+      arr.push(
+        <PetItem pet={pets[pet]} onClick={() => handleCurrentPet(pet)} />
+      );
+    }
+    return arr;
+  };
   return (
     <StyledPage>
-      <CurrentPet />
+      <div className="pet-area">
+        <PetItem pet={pets[currentPet]} className="current-pet" />
+        <PetMenu currentPet={currentPet} pets={pets} />
+      </div>
       <Nav />
       <Outlet />
+      <button onClick={() => setShowDrawer(true)}>click</button>
+      <Drawer
+        visible={showDrawer}
+        onClose={() => setShowDrawer(false)}
+        placement="bottom"
+      >
+        {renderPets()}
+      </Drawer>
     </StyledPage>
   );
 }
