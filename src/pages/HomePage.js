@@ -26,19 +26,19 @@ const StyledPage = styled.div`
   }
 `;
 
-const PetMenu = ({ currentPet, pets }) => {
+const PetMenu = ({ currentPet, pets, onClick }) => {
   function getOtherPetsPhoto() {
-    let otherPets = [];
+    let photoUrls = [];
     for (let pet in pets) {
       if (pet !== currentPet) {
-        otherPets.push(pets[pet].info.photoUrl);
+        photoUrls.push(pets[pet].info.photoUrl);
       }
     }
-    return otherPets;
+    return photoUrls;
   }
   const avatars = getOtherPetsPhoto();
   return (
-    <button className="pet-menu">
+    <button className="pet-menu" onClick={onClick}>
       <Avatar.Group>
         {avatars.map((url) => (
           <Avatar src={url} stacked />
@@ -68,11 +68,15 @@ export default function HomePage(props) {
     <StyledPage>
       <div className="pet-area">
         <PetItem pet={pets[currentPet]} className="current-pet" />
-        <PetMenu currentPet={currentPet} pets={pets} />
+        <PetMenu
+          currentPet={currentPet}
+          pets={pets}
+          onClick={() => setShowDrawer(true)}
+        />
       </div>
       <Nav />
       <Outlet />
-      <button onClick={() => setShowDrawer(true)}>click</button>
+
       <Drawer
         visible={showDrawer}
         onClose={() => setShowDrawer(false)}
