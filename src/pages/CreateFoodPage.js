@@ -2,6 +2,18 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Input, Select, Textarea } from "@geist-ui/core";
+import { initialize } from "../firebase";
+import {
+  collection,
+  doc,
+  setDoc,
+  addDoc,
+  onSnapshot,
+} from "firebase/firestore";
+
+const { firebaseApp, firestore } = initialize();
+const foodsCol = collection(firestore, "foods");
+
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -14,6 +26,32 @@ const StyledForm = styled.form`
     margin-bottom: 8px;
   }
 `;
+
+// "id": 4240679908,
+// "brand": "凱茲CATZ",
+// 'product':"",
+// "flavor": "雞肉",
+// "weight": 85,
+// "origin":"德國",
+// "foodType":"主食",
+// "ingredient": [],
+// "water": "80.0%",
+// "protein": "10.8%",
+// "fat": "5.6%",
+// "carbonhydrate": "1.2%",
+// "ash": "2.0%",
+// "fibre": "0.4%",
+// "calcium": "0.03%",
+// "phosphorus": "0.025%",
+// "capRatio": "120%",
+// "vitd3": 17,
+// "taurine": 127.5,
+// "zinc": 1.28,
+// "manganese": 0.26,
+// "iodine": 0.06,
+// "vite": "",
+// "nonMeatElement": "奇亞籽、月見草油"
+// "createdBy":some user id
 
 export default function CreateFoodPage(props) {
   const [foodInfo, setFoodInfo] = useState({
@@ -38,7 +76,13 @@ export default function CreateFoodPage(props) {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    props.foodHandler([...props.food, foodInfo]);
+    // props.foodHandler([...props.food, foodInfo]);
+    onSnapshot(foodsCol, (snapshot) => {
+      console.log(snapshot.docs.map((d) => d.data()));
+    });
+
+    const foodToAdd = doc(foodsCol);
+    setDoc(foodToAdd, foodInfo);
     setFoodInfo({
       brand: "",
       product: "",
@@ -49,7 +93,7 @@ export default function CreateFoodPage(props) {
       addedNutrition: "",
       origin: "",
     });
-    navigate("/foods");
+    // navigate("/foods");
   };
 
   const navigate = useNavigate();
@@ -102,7 +146,7 @@ export default function CreateFoodPage(props) {
           <Select.Option value="supplement">營養品</Select.Option>
         </Select>
       </div>
-      {console.log("props", props.food)}
+      {/* {console.log("props", props)} */}
       <div>
         <label htmlFor="ingredient"> 主要原料</label>
         <Select

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Nav from "../components/Nav";
 import { Search } from "react-feather";
 import { Link } from "react-router-dom";
-import { Drawer, Input, Modal, Tabs } from "@geist-ui/core";
+import { Drawer, Input, Modal, Tabs, Button } from "@geist-ui/core";
 import FoodItem from "../components/FoodItem";
 import ActionButton from "../components/ActionButton";
 
@@ -85,6 +85,9 @@ export default function FoodPage(props) {
       >
         <Link to="./search">
           <Input icon={<Search />} placeholder="搜尋食物名稱" />
+        </Link>
+        <Link to="./create">
+          <Button>創建食物</Button>
         </Link>
       </Drawer>
       <Nav />
