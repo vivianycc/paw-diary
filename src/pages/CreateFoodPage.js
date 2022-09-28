@@ -1,7 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { Input, Select, Textarea } from "@geist-ui/core";
+import { Select } from "@geist-ui/core";
+import Input from "../components/FoodInput";
 import { initialize } from "../firebase";
 import {
   collection,
@@ -19,39 +20,41 @@ const StyledForm = styled.form`
   flex-direction: column;
   margin: 32px;
 
-  div label {
-    display: block;
+  label[for="ingredient"],
+  label[for="foodType"] {
     font-size: 14px;
     color: var(--neutral-700);
-    margin-bottom: 8px;
+  }
+  .foodtype-select {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .foodtype-select div[name="foodType"].select {
+    width: 72px;
+    min-width: auto;
+    border: none;
+    text-align: right;
+  }
+  .ingredient {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  textarea {
+    flex: 1;
+    border: none;
+    border-bottom: 1px solid var(--neutral-200);
+    text-align: end;
+  }
+  textarea:focus {
+    outline: none;
+    border-bottom: 1px solid var(--neutral-500);
+  }
+  textarea::placeholder {
+    color: var(--neutral-300);
   }
 `;
-
-// "id": 4240679908,
-// "brand": "凱茲CATZ",
-// 'product':"",
-// "flavor": "雞肉",
-// "weight": 85,
-// "origin":"德國",
-// "foodType":"主食",
-// "ingredient": [],
-// "water": "80.0%",
-// "protein": "10.8%",
-// "fat": "5.6%",
-// "carbonhydrate": "1.2%",
-// "ash": "2.0%",
-// "fibre": "0.4%",
-// "calcium": "0.03%",
-// "phosphorus": "0.025%",
-// "capRatio": "120%",
-// "vitd3": 17,
-// "taurine": 127.5,
-// "zinc": 1.28,
-// "manganese": 0.26,
-// "iodine": 0.06,
-// "vite": "",
-// "nonMeatElement": "奇亞籽、月見草油"
-// "createdBy":some user id
 
 export default function CreateFoodPage(props) {
   const [foodInfo, setFoodInfo] = useState({
@@ -60,9 +63,27 @@ export default function CreateFoodPage(props) {
     flavor: "",
     calories: "",
     foodType: "",
-    ingredient: [],
-    addedNutrition: "",
+    ingredient: "",
     origin: "",
+    weight: "",
+    //▼ %
+    water: "",
+    protein: "",
+    fat: "",
+    carbonhydrate: "",
+    ash: "",
+    fibre: "",
+    calcium: "",
+    phosphorus: "",
+    //▼ IE
+    vitd3: "",
+    //▼ mg
+    taurine: "",
+    zinc: "",
+    manganese: "",
+    iodine: "",
+    vite: "",
+    nonMeatElement: [],
   });
 
   const handleChange = (event) => {
@@ -71,18 +92,63 @@ export default function CreateFoodPage(props) {
   const handleFoodTypeSelect = (value) => {
     setFoodInfo({ ...foodInfo, foodType: value });
   };
-  const handleIngredientSelect = (value) => {
-    setFoodInfo({ ...foodInfo, ingredient: value });
-  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    // props.foodHandler([...props.food, foodInfo]);
-    onSnapshot(foodsCol, (snapshot) => {
-      console.log(snapshot.docs.map((d) => d.data()));
-    });
-
+    const {
+      brand,
+      product,
+      flavor,
+      calories,
+      foodType,
+      ingredient,
+      origin,
+      weight,
+      water,
+      protein,
+      fat,
+      carbonhydrate,
+      ash,
+      fibre,
+      calcium,
+      phosphorus,
+      vitd3,
+      taurine,
+      zinc,
+      manganese,
+      iodine,
+      vite,
+    } = foodInfo;
+    const newFoodInfo = {
+      brand,
+      product,
+      flavor,
+      calories: Number(calories),
+      foodType,
+      ingredient: ingredient.split(","),
+      origin,
+      weight: Number(weight),
+      //▼ %
+      water: Number(water),
+      protein: Number(protein),
+      fat: Number(fat),
+      carbonhydrate: Number(carbonhydrate),
+      ash: Number(ash),
+      fibre: Number(fibre),
+      calcium: Number(calcium),
+      phosphorus: Number(phosphorus),
+      //▼ mg
+      vitd3: Number(vitd3),
+      taurine: Number(taurine),
+      zinc: Number(zinc),
+      manganese: Number(manganese),
+      iodine: Number(iodine),
+      vite: Number(vite),
+      nonMeatElement: [],
+    };
     const foodToAdd = doc(foodsCol);
-    setDoc(foodToAdd, foodInfo);
+    setDoc(foodToAdd, newFoodInfo);
+
     setFoodInfo({
       brand: "",
       product: "",
@@ -92,49 +158,65 @@ export default function CreateFoodPage(props) {
       ingredient: [],
       addedNutrition: "",
       origin: "",
+      weight: "",
+      //▼ %
+      water: "",
+      protein: "",
+      fat: "",
+      carbonhydrate: "",
+      ash: "",
+      fibre: "",
+      calcium: "",
+      phosphorus: "",
+      //▼ mg
+      vitd3: "",
+      taurine: "",
+      zinc: "",
+      manganese: "",
+      iodine: "",
+      vite: "",
+      nonMeatElement: [],
     });
     // navigate("/foods");
   };
 
   const navigate = useNavigate();
   return (
-    <StyledForm onSubmit={handleSubmit}>
+    <StyledForm onSubmit={handleSubmit} className="food-form">
       <Input
+        label="品牌名稱"
         placeholder="葛雷特"
-        initialValue="葛雷特"
         name="brand"
         value={foodInfo.brand}
         onChange={handleChange}
         required
-      >
-        品牌名稱
-      </Input>
+      />
+
       <Input
+        label="系列名稱"
         placeholder="精緻時光"
         name="product"
         value={foodInfo.product}
         onChange={handleChange}
-      >
-        系列名稱
-      </Input>
+      />
+
       <Input
+        label="品項名稱"
         placeholder="3號鮭魚＆火雞"
         name="flavor"
         value={foodInfo.flavor}
         onChange={handleChange}
-      >
-        品項名稱
-      </Input>
+      />
+
       <Input
-        placeholder="191"
-        name="calories"
-        value={foodInfo.calories}
+        label="原產地"
+        placeholder="德國"
+        value={foodInfo.origin}
         onChange={handleChange}
-      >
-        卡路里(kcal/100g)
-      </Input>
-      <div>
-        <label htmlFor="ingredient"> 種類</label>
+      />
+
+      <div className="foodtype-select">
+        <label htmlFor="foodType"> 種類</label>
         <Select
           placeholder="主食"
           name="foodType"
@@ -146,34 +228,133 @@ export default function CreateFoodPage(props) {
           <Select.Option value="supplement">營養品</Select.Option>
         </Select>
       </div>
+
+      <Input
+        label="卡路里(kcal/100g)"
+        placeholder="191"
+        name="calories"
+        value={foodInfo.calories}
+        onChange={handleChange}
+      />
+
       {/* {console.log("props", props)} */}
-      <div>
+      <div className="ingredient">
         <label htmlFor="ingredient"> 主要原料</label>
-        <Select
-          multiple
-          placeholder="雞肉"
+        <textarea
           name="ingredient"
           value={foodInfo.ingredient}
-          onChange={handleIngredientSelect}
-        >
-          <Select.Option value="chicken">雞肉</Select.Option>
-          <Select.Option value="beef">牛肉</Select.Option>
-          <Select.Option value="salmon">鮭魚</Select.Option>
-        </Select>
-      </div>
-
-      <div>
-        <label htmlFor="addedNutrition"> 營養添加物</label>
-        <Textarea
-          name="addedNutrition"
-          placeholder="牛磺酸、硫酸鋅..."
-          value={foodInfo.addedNutrition}
+          placeholder="雞肉,雞心...（請用逗點分開）"
           onChange={handleChange}
         />
       </div>
-      <Input placeholder="德國">原產地</Input>
+
+      <Input
+        label="水份(%)"
+        name="water"
+        value={foodInfo.water}
+        onChange={handleChange}
+        placeholder="80.0"
+      />
+
+      <Input
+        label="蛋白質(%)"
+        name="protein"
+        value={foodInfo.protein}
+        onChange={handleChange}
+        placeholder="10.8"
+      />
+
+      <Input
+        label="脂肪(%)"
+        name="fat"
+        value={foodInfo.fat}
+        onChange={handleChange}
+        placeholder="5.6"
+      />
+
+      <Input
+        label="碳水化合物(%)"
+        name="carbonhydrate"
+        value={foodInfo.carbonhydrate}
+        onChange={handleChange}
+        placeholder="1.2"
+      />
+      <Input
+        label="灰質(%)"
+        name="ash"
+        value={foodInfo.ash}
+        onChange={handleChange}
+        placeholder="2.0"
+      />
+
+      <Input
+        label="纖維(%)"
+        name="fibre"
+        value={foodInfo.fibre}
+        onChange={handleChange}
+        placeholder="0.4"
+      />
+      <Input
+        label="鈣(%)"
+        name="calcium"
+        value={foodInfo.calcium}
+        onChange={handleChange}
+        placeholder="0.03"
+      />
+      <Input
+        label="磷(%)"
+        name="phosphorus"
+        value={foodInfo.phosphorus}
+        onChange={handleChange}
+        placeholder="0.03"
+      />
+      <Input
+        label="維他命 D3 (IE)"
+        name="vitd3"
+        value={foodInfo.vitd3}
+        onChange={handleChange}
+        placeholder="17"
+      />
+      <Input
+        label="維他命 E (mg)"
+        name="vite"
+        value={foodInfo.vite}
+        onChange={handleChange}
+        placeholder="0"
+      />
+      <Input
+        label="牛磺酸(mg)"
+        name="taurine"
+        value={foodInfo.taurine}
+        onChange={handleChange}
+        placeholder="127.5"
+      />
+
+      <Input
+        label="鋅(mg)"
+        name="zinc"
+        value={foodInfo.zinc}
+        onChange={handleChange}
+        placeholder="127.5"
+      />
+
+      <Input
+        label="錳(mg)"
+        name="manganese"
+        value={foodInfo.manganese}
+        onChange={handleChange}
+        placeholder="0.26"
+      />
+
+      <Input
+        label="碘(mg)"
+        name="iodine"
+        value={foodInfo.iodine}
+        onChange={handleChange}
+        placeholder="0.06"
+      />
       <div>
-        <button>Submit Contact</button>
+        <button>送出</button>
       </div>
     </StyledForm>
   );
