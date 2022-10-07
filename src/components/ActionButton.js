@@ -9,9 +9,5 @@ const StyledIconButton = styled(IconButton)`
 `;
 
 export default function ActionButton({ onClick }) {
-  return (
-    <StyledIconButton size={56} onClick={onClick}>
-      <Plus />
-    </StyledIconButton>
-  );
+  return <StyledIconButton size={56} onClick={onClick} icon={<Plus />} />;
 }

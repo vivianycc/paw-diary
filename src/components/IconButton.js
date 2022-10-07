@@ -7,14 +7,15 @@ const StyledButton = styled.button`
   border: none;
   border-radius: 100%;
   background-color: ${(props) => props.color || "var(--neutral-700)"};
-  color: white;
+  color: ${(props) => props.strokeColor || "var(--neutral-700)"};
 `;
 export default function IconButton({
   className,
-  children,
   size = "48",
   onClick,
   color = "var(--neutral-700)",
+  strokeColor = "#FFF",
+  icon,
 }) {
   return (
     <StyledButton
@@ -22,8 +23,9 @@ export default function IconButton({
       size={size}
       onClick={onClick}
       color={color}
+      strokeColor={strokeColor}
     >
-      {children}
+      {icon}
     </StyledButton>
   );
 }

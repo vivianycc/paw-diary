@@ -81,6 +81,42 @@ function App() {
     //   breathRate: 30,
     // },
   ]);
+  const [entries, setEntries] = useState([
+    {
+      date: "2022/10/01",
+      note: "今天好像特別有活力！",
+      foodIntake: [],
+      photos: [],
+    },
+    {
+      date: "2022/10/02",
+      note: "今天好像特別有活力！",
+      foodIntake: [],
+      photos: [],
+    },
+    {
+      date: "2022/10/03",
+      note: "今天好像特別有活力！",
+      foodIntake: [],
+      photos: [],
+    },
+    {
+      date: "2022/10/07",
+      note: "今天好像特別有活力！",
+      foodIntake: [
+        {
+          foodBrand: "魔力喵",
+          foodProduct: "精緻時光主食罐",
+          foodFlavor: "鮭魚＆火雞",
+          foodId: "12345",
+          calories: 96,
+          portion: 30,
+          time: "08:30am",
+        },
+      ],
+      photos: [],
+    },
+  ]);
 
   const switchPet = (currentPet, nextPet) => {
     setPets({
@@ -121,7 +157,7 @@ function App() {
             />
           }
         >
-          <Route index element={<DiaryPage />} />
+          <Route index element={<DiaryPage entries={entries} />} />
           <Route path="foods" element={<FoodPage foods={foods} />} />
           <Route
             path="stats"
