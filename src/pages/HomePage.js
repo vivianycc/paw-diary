@@ -8,6 +8,8 @@ import PetItem from "../components/PetItem";
 const StyledPage = styled.div`
   height: 100vh;
   padding: 32px;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   background-color: var(--neutral-100);
 
