@@ -102,6 +102,7 @@ export default function Calendar({
           <React.Fragment>
             {week.map((day) => (
               <DayButton
+                key={day}
                 currentMonth={
                   day.format("M") === dayjs().month(monthIndex).format("M")
                 }

@@ -42,8 +42,8 @@ const PetMenu = ({ currentPet, pets, onClick }) => {
   return (
     <button className="pet-menu" onClick={onClick}>
       <Avatar.Group>
-        {avatars.map((url) => (
-          <Avatar src={url} stacked />
+        {avatars.map((url, i) => (
+          <Avatar src={url} stacked key={i} />
         ))}
       </Avatar.Group>
     </button>
@@ -61,7 +61,11 @@ export default function HomePage(props) {
     let arr = [];
     for (let pet in pets) {
       arr.push(
-        <PetItem pet={pets[pet]} onClick={() => handleCurrentPet(pet)} />
+        <PetItem
+          pet={pets[pet]}
+          key={pet}
+          onClick={() => handleCurrentPet(pet)}
+        />
       );
     }
     return arr;

@@ -7,7 +7,7 @@ import { Calendar, Heart, Image, BookOpen, TrendingUp } from "react-feather";
 import { Modal, Drawer } from "@geist-ui/core";
 import CalendarView from "../components/Calendar";
 import IconButton from "../components/IconButton";
-import FoodIntakeItem from "../components/FoodIntakeItem";
+import FoodRecordItem from "../components/FoodRecordItem";
 import MenuItem from "../components/MenuItem";
 import ActionButton from "../components/ActionButton";
 
@@ -67,7 +67,7 @@ export default function DiaryPage(props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const filtered = props.entries.filter((entry) => {
+    const filtered = props.diaries.filter((entry) => {
       if (
         dayjs(entry.date).format("YYYY/MM/DD") ===
         selectedDay.format("YYYY/MM/DD")
@@ -80,13 +80,13 @@ export default function DiaryPage(props) {
     } else {
       setSelectedDayData([]);
     }
-  }, [props.entries, selectedDay]);
+  }, [props.diaries, selectedDay]);
 
   const renderEmptyContent = () => {
     return <div className="empty-message">今天還沒有紀錄 </div>;
   };
   const renderContent = () => {
-    const { note, foodIntake = [] } = selectedDayData;
+    const { note, foodRecord = [] } = selectedDayData;
     return (
       <>
         <div className="note">
@@ -94,8 +94,8 @@ export default function DiaryPage(props) {
           {note}
         </div>
         <h2>食物紀錄</h2>
-        {foodIntake.map((info) => (
-          <FoodIntakeItem info={info} />
+        {foodRecord.map((info) => (
+          <FoodRecordItem info={info} />
         ))}
       </>
     );

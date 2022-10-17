@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const StyledFoodIntakeItem = styled.div`
+const StyledFoodRecordItem = styled.div`
   padding: 16px;
   border-radius: 24px;
   background-color: #fff;
@@ -30,17 +30,17 @@ const StyledFoodIntakeItem = styled.div`
   }
 `;
 
-export default function FoodIntakeItem({ info }) {
+export default function FoodRecordItem({ info }) {
   const { foodBrand, foodProduct, foodFlavor, time, portion, calories } = info;
   const calorieIntake = (calories * portion) / 100;
   return (
-    <StyledFoodIntakeItem>
+    <StyledFoodRecordItem>
       <span className="time">{time}</span>
       <span className="item-name-portion">
         <h3 className="item-name">{foodFlavor}</h3>
         <p>{calorieIntake} kcal</p>
       </span>
       <p className="item-desc">{`${foodBrand} ${foodProduct} ${portion}g`}</p>
-    </StyledFoodIntakeItem>
+    </StyledFoodRecordItem>
   );
 }

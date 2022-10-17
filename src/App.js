@@ -8,6 +8,7 @@ import CreateFoodPage from "./pages/CreateFoodPage";
 import AddFoodPage from "./pages/AddFoodPage";
 import DiaryPage from "./pages/DiaryPage";
 import AddFoodRecordPage from "./pages/AddFoodRecordPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const [currentPet, setCurrentPet] = useState("pet1");
@@ -82,29 +83,29 @@ function App() {
     //   breathRate: 30,
     // },
   ]);
-  const [entries, setEntries] = useState([
+  const [diaries, setDiaries] = useState([
     {
       date: "2022/10/01",
       note: "今天好像特別有活力！",
-      foodIntake: [],
+      foodRecord: [],
       photos: [],
     },
     {
       date: "2022/10/02",
       note: "今天好像特別有活力！",
-      foodIntake: [],
+      foodRecord: [],
       photos: [],
     },
     {
       date: "2022/10/03",
       note: "今天好像特別有活力！",
-      foodIntake: [],
+      foodRecord: [],
       photos: [],
     },
     {
       date: "2022/10/07",
       note: "今天好像特別有活力！",
-      foodIntake: [
+      foodRecord: [
         {
           foodBrand: "魔力喵",
           foodProduct: "精緻時光主食罐",
@@ -203,7 +204,7 @@ function App() {
             />
           }
         >
-          <Route index element={<DiaryPage entries={entries} />} />
+          <Route index element={<DiaryPage diaries={diaries} />} />
           <Route path="foods" element={<FoodPage foods={foods} />} />
           <Route
             path="stats"
@@ -211,12 +212,21 @@ function App() {
           />
         </Route>
         <Route path="foods/create" element={<CreateFoodPage />} />
-        <Route path="foods/records/add" element={<AddFoodRecordPage />} />
+        <Route
+          path="foods/records/add"
+          element={
+            <AddFoodRecordPage
+              entries={diaries}
+              addfoodRecordHandler={setDiaries}
+            />
+          }
+        />
         <Route
           path="/foods/add"
           element={<AddFoodPage foods={foods} addFoodHandler={setFoods} />}
         />
         <Route path="foods/search" element={<FoodSearch foods={foods} />} />
+        <Route path="profile" element={<ProfilePage />} />
       </Routes>
     </div>
   );
