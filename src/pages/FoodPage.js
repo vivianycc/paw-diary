@@ -83,7 +83,7 @@ export default function FoodPage(props) {
         onClose={() => setShowDrawer(false)}
         placement="bottom"
       >
-        <Link to="./search">
+        <Link to="./search" state={{ from: "foods" }}>
           <Input icon={<Search />} placeholder="搜尋食物名稱" />
         </Link>
         <Link to="./create">

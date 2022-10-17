@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-tw";
@@ -63,6 +64,7 @@ export default function DiaryPage(props) {
   const [selectedDayData, setSelectedDayData] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const filtered = props.entries.filter((entry) => {
@@ -127,7 +129,13 @@ export default function DiaryPage(props) {
         placement="bottom"
       >
         <StyledMenuItem>
-          <MenuItem icon={<Heart />} label="食物" />
+          <MenuItem
+            icon={<Heart />}
+            label="食物"
+            onClick={() =>
+              navigate("/foods/search", { state: { from: "diary" } })
+            }
+          />
           <MenuItem icon={<Image />} label="照片" />
           <MenuItem icon={<BookOpen />} label="日記" />
           <MenuItem icon={<TrendingUp />} label="數據" />

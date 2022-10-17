@@ -7,6 +7,7 @@ import FoodSearch from "./pages/FoodSearch";
 import CreateFoodPage from "./pages/CreateFoodPage";
 import AddFoodPage from "./pages/AddFoodPage";
 import DiaryPage from "./pages/DiaryPage";
+import AddFoodRecordPage from "./pages/AddFoodRecordPage";
 
 function App() {
   const [currentPet, setCurrentPet] = useState("pet1");
@@ -210,6 +211,7 @@ function App() {
           />
         </Route>
         <Route path="foods/create" element={<CreateFoodPage />} />
+        <Route path="foods/records/add" element={<AddFoodRecordPage />} />
         <Route
           path="/foods/add"
           element={<AddFoodPage foods={foods} addFoodHandler={setFoods} />}

@@ -2,19 +2,19 @@ import { useState } from "react";
 import styled from "styled-components";
 import { Input } from "@geist-ui/core";
 import { Search, ArrowLeft } from "react-feather";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import SearchResultItem from "../components/SearchResultItem";
 import IconButton from "../components/IconButton";
-import FOODDATA from "../data.json";
 import { initialize } from "../firebase";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { useEffect } from "react";
 
 const StyledFoodSearch = styled.div`
   margin: 32px;
-
   .search-bar {
     display: flex;
+    align-items: center;
+    margin-bottom: 24px;
   }
 `;
 
@@ -25,6 +25,7 @@ export default function FoodSearch(props) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useState("");
   const [foodData, setFoodData] = useState([]);
+  const { state } = useLocation();
 
   useEffect(() => {
     const foodsRef = collection(firestore, "foods");
@@ -40,13 +41,38 @@ export default function FoodSearch(props) {
     });
   }, []);
 
+  const renderResultItem = (food) => {
+    if (state.from === "foods") {
+      return (
+        <SearchResultItem
+          food={food}
+          key={food.id}
+          actionLabel="加入最愛"
+          disabled={foodAdded.includes(food.id)}
+          onClick={() => navigate("/foods/add", { state: { ...food } })}
+        />
+      );
+    } else {
+      return (
+        <SearchResultItem
+          food={food}
+          key={food.id}
+          actionLabel="加入紀錄"
+          onClick={() => navigate("/foods/records/add", { state: { ...food } })}
+        />
+      );
+    }
+  };
+
   return (
     <StyledFoodSearch>
       <div className="search-bar">
         <Link to="/foods">
-          <IconButton size="40" color="transparent">
-            <ArrowLeft color="var(--neutral-700)" />
-          </IconButton>
+          <IconButton
+            size="40"
+            color="transparent"
+            icon={<ArrowLeft color="var(--neutral-700)" />}
+          ></IconButton>
         </Link>
         <Input
           icon={<Search />}
@@ -70,21 +96,7 @@ export default function FoodSearch(props) {
             }
             // return food;
           })
-          .map((food) => {
-            if (foodAdded.includes(food.id)) {
-              return (
-                <SearchResultItem {...food} key={food.id} disabled={true} />
-              );
-            } else {
-              return (
-                <SearchResultItem
-                  {...food}
-                  key={food.id}
-                  onClick={() => navigate("/foods/add", { state: { ...food } })}
-                />
-              );
-            }
-          })}
+          .map(renderResultItem)}
       </div>
     </StyledFoodSearch>
   );

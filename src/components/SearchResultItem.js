@@ -11,24 +11,31 @@ const StyledItem = styled.li`
   position: relative;
 
   button {
+    padding: 6px 12px;
+    border: ${(props) =>
+      props.disabled ? "transparent" : "1px solid var(--neutral-700)"};
+    border-radius: 8px;
     position: absolute;
     top: 50%;
     right: 16px;
     transform: translateY(-50%);
+    color: ${(props) =>
+      props.disabled ? "var(--neutral-300)" : "var(--neutral-700)"};
+    background: ${(props) => console.log(props)};
   }
 `;
-export default function SearchResultItem(props) {
-  console.log(props);
+export default function SearchResultItem({
+  food,
+  onClick,
+  disabled,
+  actionLabel,
+}) {
+  console.log(food);
   return (
-    <StyledItem>
-      <p>{props.brand}</p>
-      <p>{props.flavor}</p>
-      <IconButton
-        onClick={props.onClick}
-        color={props.disabled ? "var(--neutral-200)" : "var(--neutral-400)"}
-      >
-        {props.disabled ? <Check /> : <Plus />}
-      </IconButton>
+    <StyledItem disabled={disabled}>
+      <p>{food.brand}</p>
+      <p>{food.flavor}</p>
+      <button onClick={onClick}>{disabled ? "已加入" : actionLabel}</button>
     </StyledItem>
   );
 }
