@@ -16,12 +16,11 @@ const StyledPage = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-
+  padding-top: 24px;
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 16px;
 
     h1 {
       letter-spacing: 2px;
@@ -45,9 +44,10 @@ const StyledPage = styled.div`
     border-radius: 24px;
   }
   .empty-message {
+    margin-top: 120px;
+    flex: 1;
     color: var(--neutral-300);
     text-align: center;
-    flex: 1;
   }
   .menu-items {
   }

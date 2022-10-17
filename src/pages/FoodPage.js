@@ -9,7 +9,7 @@ import ActionButton from "../components/ActionButton";
 
 const StyledFoodPage = styled.div`
   height: 100%;
-  padding-top: 32px;
+  padding-top: 24px;
   .items {
     height: 100%;
     padding-bottom: 128px;
