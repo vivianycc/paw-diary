@@ -32,7 +32,7 @@ const StyledFoodRecordItem = styled.div`
 
 export default function FoodRecordItem({ info }) {
   const { foodBrand, foodProduct, foodFlavor, time, portion, calories } = info;
-  const calorieIntake = (calories * portion) / 100;
+  const calorieIntake = ((calories * portion) / 100).toFixed(2);
   return (
     <StyledFoodRecordItem>
       <span className="time">{time}</span>

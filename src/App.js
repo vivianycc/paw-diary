@@ -216,7 +216,7 @@ function App() {
           path="foods/records/add"
           element={
             <AddFoodRecordPage
-              entries={diaries}
+              diaries={diaries}
               addfoodRecordHandler={setDiaries}
             />
           }

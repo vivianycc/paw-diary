@@ -75,6 +75,7 @@ export default function DiaryPage(props) {
         return entry;
       }
     });
+
     if (filtered.length > 0) {
       setSelectedDayData(...filtered);
     } else {
@@ -89,10 +90,12 @@ export default function DiaryPage(props) {
     const { note, foodRecord = [] } = selectedDayData;
     return (
       <>
-        <div className="note">
-          {console.log(selectedDayData)}
-          {note}
-        </div>
+        {note ? (
+          <div className="note">
+            {console.log(selectedDayData)}
+            {note}
+          </div>
+        ) : null}
         <h2>食物紀錄</h2>
         {foodRecord.map((info) => (
           <FoodRecordItem info={info} />
