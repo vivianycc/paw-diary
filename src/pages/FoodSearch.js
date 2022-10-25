@@ -5,7 +5,7 @@ import { Search, ArrowLeft } from "react-feather";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import SearchResultItem from "../components/SearchResultItem";
 import IconButton from "../components/IconButton";
-import { initialize } from "../firebase";
+import { getFirebase } from "../firebase";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { useEffect } from "react";
 
@@ -18,7 +18,7 @@ const StyledFoodSearch = styled.div`
   }
 `;
 
-const { firebaseApp, firestore } = initialize();
+const { firestore } = getFirebase();
 
 export default function FoodSearch(props) {
   const foodAdded = props.foods.map((food) => food.food.id);

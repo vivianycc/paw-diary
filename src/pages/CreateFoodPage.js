@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Select } from "@geist-ui/core";
 import Input from "../components/FoodInput";
-import { initialize } from "../firebase";
+import { getFirebase } from "../firebase";
 import {
   collection,
   doc,
@@ -12,7 +12,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
-const { firebaseApp, firestore } = initialize();
+const { firestore } = getFirebase();
 const foodsCol = collection(firestore, "foods");
 
 const StyledForm = styled.form`
