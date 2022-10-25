@@ -10,6 +10,7 @@ import IconButton from "../components/IconButton";
 import FoodRecordItem from "../components/FoodRecordItem";
 import MenuItem from "../components/MenuItem";
 import ActionButton from "../components/ActionButton";
+import { getFirebase } from "../firebase";
 
 const StyledPage = styled.div`
   height: 100%;
@@ -65,6 +66,7 @@ export default function DiaryPage(props) {
   const [showModal, setShowModal] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const navigate = useNavigate();
+  const { auth } = getFirebase();
 
   useEffect(() => {
     const filtered = props.diaries.filter((entry) => {

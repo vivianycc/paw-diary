@@ -9,6 +9,8 @@ import AddFoodPage from "./pages/AddFoodPage";
 import DiaryPage from "./pages/DiaryPage";
 import AddFoodRecordPage from "./pages/AddFoodRecordPage";
 import ProfilePage from "./pages/ProfilePage";
+import LoginPage from "./pages/LoginPage";
+import { ProvideAuth } from "./hooks/useAuth";
 
 function App() {
   const [currentPet, setCurrentPet] = useState("pet1");
@@ -192,42 +194,45 @@ function App() {
 
   return (
     <div className="App">
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <HomePage
-              currentPet={currentPet}
-              pets={pets}
-              setCurrentPet={setCurrentPet}
-              switchPet={switchPet}
-            />
-          }
-        >
-          <Route index element={<DiaryPage diaries={diaries} />} />
-          <Route path="foods" element={<FoodPage foods={foods} />} />
+      <ProvideAuth>
+        <Routes>
           <Route
-            path="stats"
-            element={<StatsPage stats={stats} setStats={setStats} />}
-          />
-        </Route>
-        <Route path="foods/create" element={<CreateFoodPage />} />
-        <Route
-          path="foods/records/add"
-          element={
-            <AddFoodRecordPage
-              diaries={diaries}
-              addfoodRecordHandler={setDiaries}
+            path="/"
+            element={
+              <HomePage
+                currentPet={currentPet}
+                pets={pets}
+                setCurrentPet={setCurrentPet}
+                switchPet={switchPet}
+              />
+            }
+          >
+            <Route index element={<DiaryPage diaries={diaries} />} />
+            <Route path="foods" element={<FoodPage foods={foods} />} />
+            <Route
+              path="stats"
+              element={<StatsPage stats={stats} setStats={setStats} />}
             />
-          }
-        />
-        <Route
-          path="/foods/add"
-          element={<AddFoodPage foods={foods} addFoodHandler={setFoods} />}
-        />
-        <Route path="foods/search" element={<FoodSearch foods={foods} />} />
-        <Route path="profile" element={<ProfilePage />} />
-      </Routes>
+          </Route>
+          <Route path="foods/create" element={<CreateFoodPage />} />
+          <Route
+            path="foods/records/add"
+            element={
+              <AddFoodRecordPage
+                diaries={diaries}
+                addfoodRecordHandler={setDiaries}
+              />
+            }
+          />
+          <Route
+            path="/foods/add"
+            element={<AddFoodPage foods={foods} addFoodHandler={setFoods} />}
+          />
+          <Route path="foods/search" element={<FoodSearch foods={foods} />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="login" element={<LoginPage />} />
+        </Routes>
+      </ProvideAuth>
     </div>
   );
 }
