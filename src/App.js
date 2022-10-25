@@ -11,6 +11,7 @@ import AddFoodRecordPage from "./pages/AddFoodRecordPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import { ProvideAuth } from "./hooks/useAuth";
+import RequireAuth from "./components/RequireAuth";
 
 function App() {
   const [currentPet, setCurrentPet] = useState("pet1");
@@ -199,12 +200,14 @@ function App() {
           <Route
             path="/"
             element={
-              <HomePage
-                currentPet={currentPet}
-                pets={pets}
-                setCurrentPet={setCurrentPet}
-                switchPet={switchPet}
-              />
+              <RequireAuth>
+                <HomePage
+                  currentPet={currentPet}
+                  pets={pets}
+                  setCurrentPet={setCurrentPet}
+                  switchPet={switchPet}
+                />
+              </RequireAuth>
             }
           >
             <Route index element={<DiaryPage diaries={diaries} />} />
@@ -214,6 +217,14 @@ function App() {
               element={<StatsPage stats={stats} setStats={setStats} />}
             />
           </Route>
+          <Route
+            path="profile"
+            element={
+              <RequireAuth>
+                <ProfilePage />
+              </RequireAuth>
+            }
+          />
           <Route path="foods/create" element={<CreateFoodPage />} />
           <Route
             path="foods/records/add"
@@ -229,7 +240,6 @@ function App() {
             element={<AddFoodPage foods={foods} addFoodHandler={setFoods} />}
           />
           <Route path="foods/search" element={<FoodSearch foods={foods} />} />
-          <Route path="profile" element={<ProfilePage />} />
           <Route path="login" element={<LoginPage />} />
         </Routes>
       </ProvideAuth>

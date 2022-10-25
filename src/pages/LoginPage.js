@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import styled from "styled-components";
 
@@ -20,6 +20,7 @@ const StyledPage = styled.div`
 export default function LoginPage(props) {
   const { logIn, signUp, logOut, user } = useAuth();
   const navigate = useNavigate();
+  const { state } = useLocation();
   const [form, setForm] = useState({
     email: "hello@tale.app",
     password: "123456",
@@ -27,6 +28,14 @@ export default function LoginPage(props) {
 
   const handleInput = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleLogIn = () => {
+    logIn(form.email, form.password).then(() => navigate(state?.path || "/"));
+  };
+
+  const handleSignUp = () => {
+    signUp(form.email, form.password).then(() => navigate("/"));
   };
 
   return (
@@ -45,10 +54,8 @@ export default function LoginPage(props) {
         value={form.password}
         onChange={handleInput}
       />
-      <button onClick={() => logIn(form.email, form.password)}>Sign In</button>
-      <button onClick={() => signUp(form.email, form.password)}>
-        Create Account
-      </button>
+      <button onClick={handleLogIn}>Sign In</button>
+      <button onClick={handleSignUp}>Create Account</button>
       <button onClick={logOut}>log out</button>
       {user && <h1>{user.email}</h1>}
     </StyledPage>
