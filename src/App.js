@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import { ProvideAuth } from "./hooks/useAuth";
+import RequireAuth from "./components/RequireAuth";
 import HomePage from "./pages/HomePage";
 import FoodPage from "./pages/FoodPage";
 import StatsPage from "./pages/StatsPage";
@@ -9,9 +11,8 @@ import AddFoodPage from "./pages/AddFoodPage";
 import DiaryPage from "./pages/DiaryPage";
 import AddFoodRecordPage from "./pages/AddFoodRecordPage";
 import ProfilePage from "./pages/ProfilePage";
+import CreatePetPage from "./pages/CreatePetPage";
 import LoginPage from "./pages/LoginPage";
-import { ProvideAuth } from "./hooks/useAuth";
-import RequireAuth from "./components/RequireAuth";
 
 function App() {
   const [currentPet, setCurrentPet] = useState("pet1");
@@ -241,6 +242,14 @@ function App() {
           />
           <Route path="foods/search" element={<FoodSearch foods={foods} />} />
           <Route path="login" element={<LoginPage />} />
+          <Route
+            path="pets/create"
+            element={
+              <RequireAuth>
+                <CreatePetPage />
+              </RequireAuth>
+            }
+          />
         </Routes>
       </ProvideAuth>
     </div>
