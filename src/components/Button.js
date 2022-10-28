@@ -21,9 +21,17 @@ const StyledButton = styled.button`
 //   background-color: "var(--neutral-300)";
 // `;
 
-export default function Button({ label, onClick, className, color, bgColor }) {
+export default function Button({
+  label,
+  onClick,
+  className,
+  color,
+  bgColor,
+  type,
+}) {
   return (
     <StyledButton
+      type={type}
       onClick={onClick}
       className={className}
       color={color}

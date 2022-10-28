@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import styled from "styled-components";
+import { getFirebase } from "../firebase";
+import { setDoc, doc } from "firebase/firestore";
 
 const StyledPage = styled.div`
   display: flex;
@@ -26,6 +28,14 @@ export default function LoginPage(props) {
     password: "123456",
   });
 
+  const { firestore } = getFirebase();
+
+  useEffect(() => {
+    if (user) {
+      navigate(state?.path || "/");
+    }
+  }, [user]);
+
   const handleInput = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -35,7 +45,13 @@ export default function LoginPage(props) {
   };
 
   const handleSignUp = () => {
-    signUp(form.email, form.password).then(() => navigate("/"));
+    signUp(form.email, form.password)
+      .then((user) =>
+        setDoc(doc(firestore, "users", user.uid), {
+          name: user.displayName,
+        })
+      )
+      .then(() => navigate("/"));
   };
 
   return (

@@ -3,6 +3,9 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import RadioButton from "../components/RadioButton";
 import Button from "../components/Button";
+import { getFirebase } from "../firebase";
+import { setDoc, doc } from "firebase/firestore";
+import { useAuth } from "../hooks/useAuth";
 
 const StyledPage = styled.div`
   padding: 24px;
@@ -39,10 +42,13 @@ export default function CreatePetPage() {
     species: "",
     breed: "",
     birthday: "",
-    neutralized: "",
+    neutered: "",
     chipNumber: "",
+    sex: "",
   });
   const navigate = useNavigate();
+  const { firestore } = getFirebase();
+  const { user } = useAuth();
 
   const handleInput = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -50,15 +56,22 @@ export default function CreatePetPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    createPet(form);
+    navigate("/profile");
   };
   const handleCancel = () => {
     navigate("/profile");
   };
 
-  const { name, breed, species, birthday, neutralized, chipNumber } = form;
+  const createPet = async (data) => {
+    const petRef = doc(firestore, "users", user.uid, "pets", form.name);
+    const docRef = await setDoc(petRef, data);
+  };
+
+  const { name, breed, species, birthday, neutered, chipNumber, sex } = form;
   return (
     <StyledPage>
-      <form action="">
+      <form onSubmit={handleSubmit}>
         <div>
           <div className="avatar"></div>
         </div>
@@ -70,6 +83,7 @@ export default function CreatePetPage() {
             value={name}
             onChange={handleInput}
             placeholder="名字"
+            required
           />
         </div>
         <RadioButton.Group>
@@ -79,6 +93,7 @@ export default function CreatePetPage() {
             value="cat"
             onChange={handleInput}
             checked={species === "cat"}
+            required
           />
 
           <RadioButton
@@ -88,8 +103,10 @@ export default function CreatePetPage() {
             value="dog"
             checked={species === "dog"}
             onChange={handleInput}
+            required
           />
         </RadioButton.Group>
+
         <div>
           <label htmlFor="breed">品種</label>
           <input
@@ -99,6 +116,26 @@ export default function CreatePetPage() {
             onChange={handleInput}
           />
         </div>
+        <RadioButton.Group>
+          <RadioButton
+            label="公"
+            name="sex"
+            value="male"
+            checked={sex === "male"}
+            onChange={handleInput}
+            required
+          />
+
+          <RadioButton
+            label="母"
+            name="sex"
+            id="female"
+            value="female"
+            checked={sex === "female"}
+            onChange={handleInput}
+            required
+          />
+        </RadioButton.Group>
         <div>
           <label htmlFor="breed">出生日期</label>
           <input
@@ -111,16 +148,16 @@ export default function CreatePetPage() {
         <RadioButton.Group>
           <RadioButton
             label="已結紮"
-            name="neutralized"
+            name="neutered"
             value={true}
-            checked={!!neutralized}
+            checked={!!neutered}
             onChange={handleInput}
           />
           <RadioButton
             label="未結紮"
-            name="neutralized"
+            name="neutered"
             value={false}
-            checked={!!neutralized}
+            checked={!!neutered}
             onChange={handleInput}
           />
         </RadioButton.Group>
@@ -133,7 +170,7 @@ export default function CreatePetPage() {
             onChange={handleInput}
           />
         </div>
-        <Button label="送出" onClick={handleSubmit} />
+        <Button label="送出" type="submit" />
         <Button
           label="取消變更"
           onClick={handleCancel}

@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
 import Button from "../components/Button";
 import PetItem from "../components/PetItem";
+import { getFirebase } from "../firebase";
+import { collection, onSnapshot } from "firebase/firestore";
 
 const StyledPage = styled.div`
   height: 100vh;
@@ -15,13 +17,13 @@ const StyledPage = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    margin-top: 40px;
+    margin: 40px 0 16px;
     padding: 40px 24px;
     position: relative;
     background-color: #fff;
     border-radius: 24px;
   }
-  .avatar {
+  .user-avatar {
     height: 72px;
     width: 72px;
     border-radius: 100%;
@@ -37,11 +39,42 @@ const StyledPage = styled.div`
     font-size: 14px;
     color: var(--neutral-500);
   }
+  .pet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+
+    h2 {
+      font-size: 18px;
+      font-weight: 400;
+    }
+  }
+  .pets-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 `;
 
 export default function ProfilePage() {
   const { user, logOut } = useAuth();
   const navigate = useNavigate();
+
+  const { firestore } = getFirebase();
+  const petCol = collection(firestore, "users", user.uid, "pets");
+
+  const [pets, setPets] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(petCol, (snapshot) => {
+      const arr = snapshot.docs.map((doc) => doc.data());
+      setPets(arr);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const handleLogOut = () => {
     logOut().then(() => navigate("/login"));
@@ -54,17 +87,25 @@ export default function ProfilePage() {
   return (
     <StyledPage>
       <div className="user-info">
-        <div className="avatar"></div>
+        <div className="user-avatar"></div>
         <h1 className="name">{user.displayName || user.email.split("@")[0]}</h1>
         <p className="email">{user.email}</p>
       </div>
 
-      <Button
-        onClick={handleCreatePet}
-        label="新增寵物"
-        color="var(--neutral-700)"
-        bgColor="var(--neutral-200)"
-      />
+      <div className="pet-header">
+        <h2>我的寵物</h2>
+        <Button
+          onClick={handleCreatePet}
+          label="新增寵物"
+          color="var(--neutral-700)"
+          bgColor="var(--neutral-200)"
+        />
+      </div>
+      <div className="pets-body">
+        {pets.map((pet) => (
+          <PetItem key={pet.name} pet={pet} bg />
+        ))}
+      </div>
       <Nav />
       <Button onClick={handleLogOut} label="Log Out" />
     </StyledPage>

@@ -11,7 +11,14 @@ const StyledRadioBtns = styled.div`
   color: var(--neutral-700);
 `;
 
-export default function RadioButton({ label, value, onChange, name, checked }) {
+export default function RadioButton({
+  label,
+  value,
+  onChange,
+  name,
+  checked,
+  required,
+}) {
   return (
     <div>
       <StyledRadio
@@ -21,6 +28,7 @@ export default function RadioButton({ label, value, onChange, name, checked }) {
         value={value}
         onChange={onChange}
         checked={checked}
+        required={required}
       />
       <label htmlFor={String(value)}>{label}</label>
     </div>

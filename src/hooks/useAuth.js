@@ -43,6 +43,7 @@ function useProvideAuth() {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
+      console.log("changed");
       if (user) {
         setUser(user);
       } else {

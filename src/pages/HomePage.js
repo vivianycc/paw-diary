@@ -33,7 +33,7 @@ const PetMenu = ({ currentPet, pets, onClick }) => {
     let photoUrls = [];
     for (let pet in pets) {
       if (pet !== currentPet) {
-        photoUrls.push(pets[pet].info.photoUrl);
+        photoUrls.push(pets[pet].photoUrl);
       }
     }
     return photoUrls;
