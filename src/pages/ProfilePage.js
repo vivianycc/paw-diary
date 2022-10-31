@@ -58,7 +58,7 @@ const StyledPage = styled.div`
 `;
 
 export default function ProfilePage() {
-  const { user, logOut } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const { firestore } = getFirebase();
@@ -76,8 +76,8 @@ export default function ProfilePage() {
     };
   }, []);
 
-  const handleLogOut = () => {
-    logOut().then(() => navigate("/login"));
+  const handleLogout = () => {
+    logout().then(() => navigate("/login"));
   };
 
   const handleCreatePet = () => {
@@ -107,7 +107,7 @@ export default function ProfilePage() {
         ))}
       </div>
       <Nav />
-      <Button onClick={handleLogOut} label="Log Out" />
+      <Button onClick={handleLogout} label="Log Out" />
     </StyledPage>
   );
 }

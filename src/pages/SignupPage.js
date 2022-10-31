@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import React, { useState } from "react";
 import styled from "styled-components";
 import LoginSignupForm from "../components/LoginSignupForm";
+import { useAuth } from "../hooks/useAuth";
+import { setDoc, doc } from "firebase/firestore";
+import { getFirebase } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 const StyledPage = styled.div`
   display: flex;
@@ -10,35 +12,36 @@ const StyledPage = styled.div`
   align-items: center;
   height: 100vh;
 `;
-
-export default function LoginPage(props) {
-  const { login, user } = useAuth();
-  const navigate = useNavigate();
-  const { state } = useLocation();
+export default function SignUpPage() {
   const [form, setForm] = useState({
-    email: "hello@tale.app",
-    password: "123456",
+    email: "",
+    password: "",
   });
 
-  useEffect(() => {
-    if (user) {
-      navigate(state?.path || "/");
-    }
-  }, [user]);
+  const { signup } = useAuth();
+
+  const { firestore } = getFirebase();
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    login(form.email, form.password).then(() => navigate(state?.path || "/"));
+    signup(form.email, form.password)
+      .then((user) =>
+        setDoc(doc(firestore, "users", user.uid), {
+          name: user.displayName,
+        })
+      )
+      .then(() => navigate("/"));
   };
 
   return (
     <StyledPage>
       <LoginSignupForm
-        formType="login"
+        formType="signup"
         email={form.email}
         password={form.password}
         onChange={handleChange}

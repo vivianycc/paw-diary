@@ -13,6 +13,7 @@ import AddFoodRecordPage from "./pages/AddFoodRecordPage";
 import ProfilePage from "./pages/ProfilePage";
 import CreatePetPage from "./pages/CreatePetPage";
 import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 function App() {
   const [currentPet, setCurrentPet] = useState("pet1");
@@ -238,6 +239,7 @@ function App() {
           />
           <Route path="foods/search" element={<FoodSearch foods={foods} />} />
           <Route path="login" element={<LoginPage />} />
+          <Route path="signup" element={<SignupPage />} />
           <Route
             path="pets/create"
             element={

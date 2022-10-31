@@ -23,18 +23,18 @@ function useProvideAuth() {
 
   const { auth } = getFirebase();
 
-  const logIn = (email, password) => {
+  const login = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password).then((res) => {
       setUser(res.user);
       return res.user;
     });
   };
 
-  const logOut = () => {
+  const logout = () => {
     return signOut(auth).then(() => setUser(false));
   };
 
-  const signUp = (email, password) => {
+  const signup = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password).then((res) => {
       setUser(res.user);
       return res.user;
@@ -43,7 +43,6 @@ function useProvideAuth() {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      console.log("changed");
       if (user) {
         setUser(user);
       } else {
@@ -54,9 +53,9 @@ function useProvideAuth() {
 
   return {
     user,
-    logIn,
-    logOut,
-    signUp,
+    login,
+    logout,
+    signup,
   };
 }
 

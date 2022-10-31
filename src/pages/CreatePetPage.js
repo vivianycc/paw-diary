@@ -1,11 +1,12 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import RadioButton from "../components/RadioButton";
-import Button from "../components/Button";
 import { getFirebase } from "../firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { useAuth } from "../hooks/useAuth";
+import RadioButton from "../components/RadioButton";
+import Button from "../components/Button";
+import Input from "../components/Input";
 
 const StyledPage = styled.div`
   padding: 24px;
@@ -14,20 +15,7 @@ const StyledPage = styled.div`
     flex-direction: column;
     gap: 24px;
   }
-  label + input {
-    width: 100%;
-  }
-  input {
-    padding: 10px 12px;
-    outline: none;
-    border: 1px solid var(--neutral-300);
-    border-radius: 8px;
-  }
-  label {
-    display: inline-block;
-    margin-bottom: 8px;
-    font-size: 14px;
-  }
+
   .avatar {
     height: 72px;
     width: 72px;
@@ -75,17 +63,15 @@ export default function CreatePetPage() {
         <div>
           <div className="avatar"></div>
         </div>
-        <div>
-          <label htmlFor="name">名字</label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={handleInput}
-            placeholder="名字"
-            required
-          />
-        </div>
+
+        <Input
+          label="名字"
+          name="name"
+          value={name}
+          onChange={handleInput}
+          placeholder="請輸入名字"
+          required
+        />
         <RadioButton.Group>
           <RadioButton
             label="貓"
@@ -107,15 +93,14 @@ export default function CreatePetPage() {
           />
         </RadioButton.Group>
 
-        <div>
-          <label htmlFor="breed">品種</label>
-          <input
-            type="text"
-            name="breed"
-            value={breed}
-            onChange={handleInput}
-          />
-        </div>
+        <Input
+          label="品種"
+          name="breed"
+          value={breed}
+          onChange={handleInput}
+          placeholder="請輸入品種"
+        />
+
         <RadioButton.Group>
           <RadioButton
             label="公"
@@ -136,15 +121,14 @@ export default function CreatePetPage() {
             required
           />
         </RadioButton.Group>
-        <div>
-          <label htmlFor="breed">出生日期</label>
-          <input
-            type="date"
-            name="birthday"
-            value={birthday}
-            onChange={handleInput}
-          />
-        </div>
+
+        <Input
+          label="出生日期"
+          type="date"
+          name="birthday"
+          value={birthday}
+          onChange={handleInput}
+        />
         <RadioButton.Group>
           <RadioButton
             label="已結紮"
@@ -161,15 +145,15 @@ export default function CreatePetPage() {
             onChange={handleInput}
           />
         </RadioButton.Group>
-        <div>
-          <label htmlFor="chipNumber">晶片號碼</label>
-          <input
-            type="number"
-            name="chipNumber"
-            value={chipNumber}
-            onChange={handleInput}
-          />
-        </div>
+
+        <Input
+          label="晶片號碼"
+          name="chipNumber"
+          value={chipNumber}
+          onChange={handleInput}
+          placeholder="請輸入晶片號碼"
+        />
+
         <Button label="送出" type="submit" />
         <Button
           label="取消變更"
