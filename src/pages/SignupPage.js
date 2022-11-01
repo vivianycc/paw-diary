@@ -35,7 +35,7 @@ export default function SignUpPage() {
           name: user.displayName,
         })
       )
-      .then(() => navigate("/"));
+      .then(() => navigate("/signup/setup"));
   };
 
   return (

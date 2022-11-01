@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { ProvideAuth } from "./hooks/useAuth";
+import { usePets } from "./hooks/usePets";
 import RequireAuth from "./components/RequireAuth";
 import HomePage from "./pages/HomePage";
 import FoodPage from "./pages/FoodPage";
@@ -14,10 +15,9 @@ import ProfilePage from "./pages/ProfilePage";
 import CreatePetPage from "./pages/CreatePetPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import CreateFirstPetPage from "./pages/CreateFirstPetPage";
 
 function App() {
-  const [currentPet, setCurrentPet] = useState("pet1");
-
   const [foods, setFoods] = useState([]);
   const [stats, setStats] = useState([
     // {
@@ -121,30 +121,6 @@ function App() {
     },
   ]);
 
-  // const switchPet = (currentPet, nextPet) => {
-  //   setPets({
-  //     ...pets,
-  //     [currentPet]: {
-  //       ...pets[currentPet],
-  //       foods: foods,
-  //       stats: stats,
-  //     },
-  //   });
-  //   setFoods(pets[nextPet].foods);
-  //   setStats(pets[nextPet].stats);
-  //   setCurrentPet(nextPet);
-  // };
-
-  // useEffect(() => {
-  //   localStorage.setItem("pets", JSON.stringify(pets));
-  // }, [pets]);
-  //   useEffect(() => {
-  //   const pets = JSON.parse(localStorage.getItem("pets"));
-  //   if (Object.keys(pets).length === 0) {
-  //     setPets(pets);
-  //   }
-  // }, []);
-
   return (
     <div className="App">
       <ProvideAuth>
@@ -194,6 +170,14 @@ function App() {
             element={
               <RequireAuth>
                 <CreatePetPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="signup/setup"
+            element={
+              <RequireAuth>
+                <CreateFirstPetPage />
               </RequireAuth>
             }
           />
