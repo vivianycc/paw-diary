@@ -96,7 +96,9 @@ export default function Calendar({
       </header>
       <Grid>
         {monthGrid[0].map((day) => (
-          <div className="day-label">{day.format("ddd").toUpperCase()}</div>
+          <div className="day-label" key={day.format("ddd")}>
+            {day.format("ddd").toUpperCase()}
+          </div>
         ))}
         {monthGrid.map((week) => (
           <React.Fragment>
