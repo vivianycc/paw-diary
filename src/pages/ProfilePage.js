@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { usePets } from "../hooks/usePets";
 import Nav from "../components/Nav";
 import Button from "../components/Button";
 import PetItem from "../components/PetItem";
-import { getFirebase } from "../firebase";
-import { collection, onSnapshot } from "firebase/firestore";
 
 const StyledPage = styled.div`
   height: 100vh;
@@ -54,6 +53,12 @@ const StyledPage = styled.div`
     display: flex;
     flex-direction: column;
     gap: 8px;
+
+    .empty-message {
+      padding: 32px;
+      text-align: center;
+      color: var(--neutral-500);
+    }
   }
 `;
 
@@ -61,20 +66,7 @@ export default function ProfilePage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const { firestore } = getFirebase();
-  const petCol = collection(firestore, "users", user.uid, "pets");
-
-  const [pets, setPets] = useState([]);
-
-  useEffect(() => {
-    const unsubscribe = onSnapshot(petCol, (snapshot) => {
-      const arr = snapshot.docs.map((doc) => doc.data());
-      setPets(arr);
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  const { pets } = usePets(user.uid);
 
   const handleLogout = () => {
     logout().then(() => navigate("/login"));
@@ -102,9 +94,13 @@ export default function ProfilePage() {
         />
       </div>
       <div className="pets-body">
-        {pets.map((pet) => (
-          <PetItem key={pet.name} pet={pet} bg />
-        ))}
+        {Object.values(pets).length === 0 ? (
+          <div class="empty-message">沒有寵物資料，快新增一個吧</div>
+        ) : (
+          Object.values(pets).map((pet) => (
+            <PetItem key={pet.name} pet={pet} bg />
+          ))
+        )}
       </div>
       <Nav />
       <Button onClick={handleLogout} label="Log Out" />

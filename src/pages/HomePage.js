@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Nav from "../components/Nav";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import { Avatar, Drawer } from "@geist-ui/core";
 import PetItem from "../components/PetItem";
+import { usePets } from "../hooks/usePets";
+import { useAuth } from "../hooks/useAuth";
 
 const StyledPage = styled.div`
   height: 100vh;
@@ -33,7 +35,8 @@ const PetMenu = ({ currentPet, pets, onClick }) => {
     let photoUrls = [];
     for (let pet in pets) {
       if (pet !== currentPet) {
-        photoUrls.push(pets[pet].photoUrl);
+        const url = pets[pet].photoUrl || "http://placekitten.com/100/100";
+        photoUrls.push(url);
       }
     }
     return photoUrls;
@@ -51,10 +54,12 @@ const PetMenu = ({ currentPet, pets, onClick }) => {
 };
 export default function HomePage(props) {
   const [showDrawer, setShowDrawer] = useState(false);
-  const { pets, switchPet, currentPet } = props;
+  const { user } = useAuth();
+  const { pets, currentPet, setCurrentPet } = usePets(user.uid);
+
   const handleCurrentPet = (pet) => {
+    setCurrentPet(pet);
     setShowDrawer(false);
-    switchPet(currentPet, pet);
   };
 
   const renderPets = () => {
@@ -70,26 +75,39 @@ export default function HomePage(props) {
     }
     return arr;
   };
+  const renderNoPets = () => {
+    return (
+      <div>
+        尚未建立寵物資料，前往 <Link to="/profile">個人頁建立寵物</Link>
+      </div>
+    );
+  };
   return (
     <StyledPage>
-      <div className="pet-area">
-        <PetItem pet={pets[currentPet]} className="current-pet" />
-        <PetMenu
-          currentPet={currentPet}
-          pets={pets}
-          onClick={() => setShowDrawer(true)}
-        />
-      </div>
-      <Nav />
-      <Outlet />
+      {Object.keys(pets).length === 0 ? (
+        renderNoPets()
+      ) : (
+        <div>
+          <div className="pet-area">
+            <PetItem pet={pets[currentPet]} className="current-pet" />
+            <PetMenu
+              currentPet={currentPet}
+              pets={pets}
+              onClick={() => setShowDrawer(true)}
+            />
+          </div>
+          <Nav />
+          <Outlet />
 
-      <Drawer
-        visible={showDrawer}
-        onClose={() => setShowDrawer(false)}
-        placement="bottom"
-      >
-        {renderPets()}
-      </Drawer>
+          <Drawer
+            visible={showDrawer}
+            onClose={() => setShowDrawer(false)}
+            placement="bottom"
+          >
+            {renderPets()}
+          </Drawer>
+        </div>
+      )}
     </StyledPage>
   );
 }
