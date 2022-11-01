@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { getFirebase } from "../firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, doc, setDoc } from "firebase/firestore";
 
 export const usePets = (uid) => {
-  const [pets, setPets] = useState([]);
+  const [pets, setPets] = useState(null);
 
   const [currentPet, setCurrentPet] = useState(null);
 
@@ -32,6 +32,10 @@ export const usePets = (uid) => {
     };
   }, [uid]);
   // addind `petcol` as suggested in the linter will cause infinite loop
+  const createPet = async (petInfo) => {
+    const petRef = doc(firestore, "users", uid, "pets", petInfo.name);
+    const docRef = await setDoc(petRef, petInfo);
+  };
 
-  return { pets, currentPet, setCurrentPet };
+  return { pets, currentPet, setCurrentPet, createPet };
 };
