@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useAuth } from "../hooks/useAuth";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -76,6 +76,13 @@ export default function ProfilePage() {
     navigate("/pets/create");
   };
 
+  const Loading = () => {
+    return <div>Loading</div>;
+  };
+  if (pets === null) {
+    return <Loading />;
+  }
+
   return (
     <StyledPage>
       <div className="user-info">
@@ -94,7 +101,7 @@ export default function ProfilePage() {
         />
       </div>
       <div className="pets-body">
-        {Object.values(pets).length === 0 ? (
+        {Object.keys(pets).length === 0 ? (
           <div class="empty-message">沒有寵物資料，快新增一個吧</div>
         ) : (
           Object.values(pets).map((pet) => (

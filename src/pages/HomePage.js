@@ -52,7 +52,7 @@ const PetMenu = ({ currentPet, pets, onClick }) => {
     </button>
   );
 };
-export default function HomePage(props) {
+export default function HomePage() {
   const [showDrawer, setShowDrawer] = useState(false);
   const { user } = useAuth();
   const { pets, currentPet, setCurrentPet } = usePets(user.uid);
@@ -82,9 +82,15 @@ export default function HomePage(props) {
       </div>
     );
   };
+  const Loading = () => {
+    return <div>Loading...</div>;
+  };
+  if (pets === null) {
+    return <Loading />;
+  }
   return (
     <StyledPage>
-      {Object.keys(pets).length === 0 ? (
+      {pets !== null && Object.keys(pets).length === 0 ? (
         renderNoPets()
       ) : (
         <div>
