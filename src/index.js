@@ -2,10 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { GeistProvider, Themes } from "@geist-ui/core";
+import { ThemeProvider } from "styled-components";
 import "./index.css";
 import App from "./App";
 
-const theme = Themes.createFromLight({
+const geistTheme = Themes.createFromLight({
   type: "taleTheme",
   palette: {
     success: "pink",
@@ -14,15 +15,26 @@ const theme = Themes.createFromLight({
     radius: "16px",
   },
 });
+const theme = {
+  colors: {
+    primary: "var(--neutral-700)",
+    onPrimary: "#fff",
+    secondary: "var(--neutral-200)",
+    onSecondary: "var(--neutral-700)",
+    warning: "red",
+  },
+};
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <GeistProvider themes={[theme]} themeType="taleTheme">
-        <App />
-        {/* <CssBaseline /> */}
-      </GeistProvider>
+      <ThemeProvider theme={theme}>
+        <GeistProvider themes={[geistTheme]} themeType="taleTheme">
+          <App />
+          {/* <CssBaseline /> */}
+        </GeistProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -96,8 +96,7 @@ export default function ProfilePage() {
         <Button
           onClick={handleCreatePet}
           label="新增寵物"
-          color="var(--neutral-700)"
-          bgColor="var(--neutral-200)"
+          variant="secondary"
         />
       </div>
       <div className="pets-body">

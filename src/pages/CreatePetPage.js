@@ -155,12 +155,7 @@ export default function CreatePetPage() {
         />
 
         <Button label="送出" type="submit" />
-        <Button
-          label="取消變更"
-          onClick={handleCancel}
-          bgColor="var(--neutral-200)"
-          color="var(--neutral-700)"
-        />
+        <Button label="取消變更" onClick={handleCancel} variant="secondary" />
       </form>
     </StyledPage>
   );

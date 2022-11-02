@@ -1,41 +1,74 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { useTheme, css } from "styled-components";
+
+const variantStyles = (theme, variant = "primary") => {
+  return {
+    primary: css`
+      color: ${theme.colors.onPrimary};
+      background: ${theme.colors.primary};
+      border: 1px solid ${theme.colors.primary};
+    `,
+    secondary: css`
+      color: ${theme.colors.onSecondary};
+      background: ${theme.colors.secondary};
+      border: 1px solid ${theme.colors.secondary};
+    `,
+    outlined: css`
+      color: ${theme.colors.primary};
+      background: transparent;
+      border: 1px solid ${theme.colors.primary};
+    `,
+  }[variant];
+};
+
+const sizeStyles = (size = "m") => {
+  return {
+    s: css`
+      padding: 6px 10px;
+      font-size: 12px;
+    `,
+    m: css`
+      padding: 10px 16px;
+      font-size: 14px;
+    `,
+    l: css`
+      padding: 14px 20px;
+      font-size: 16px;
+      border-radius: 25px;
+    `,
+  }[size];
+};
 
 const StyledButton = styled.button`
   padding: 10px 16px;
-  color: ${(props) => props.color || "#fff"};
-  background-color: ${(props) => props.bgColor || "var(--neutral-700)"};
+  color: "#fff";
+  background-color: "var(--neutral-700)";
   border-radius: 22px;
   outline: none;
   border: transparent;
   font-size: 14px;
+
+  ${({ theme, variant }) => variantStyles(theme, variant)}
+  ${({ size }) => sizeStyles(size)}
 `;
-
-// const Primary = styled(StyledButton)`
-//   color: "#fff";
-//   background-color: "var(--neutral-700)";
-// `;
-
-// export const Secondary = styled(StyledButton)`
-//   color: "var(--neutral-700)";
-//   background-color: "var(--neutral-300)";
-// `;
 
 export default function Button({
   label,
   onClick,
   className,
-  color,
-  bgColor,
   type,
+  variant,
+  size,
 }) {
+  const theme = useTheme();
   return (
     <StyledButton
       type={type}
       onClick={onClick}
       className={className}
-      color={color}
-      bgColor={bgColor}
+      variant={variant}
+      theme={theme}
+      size={size}
     >
       {label}
     </StyledButton>

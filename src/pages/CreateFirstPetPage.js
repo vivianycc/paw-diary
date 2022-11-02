@@ -144,7 +144,7 @@ export default function CreateFirstPetPage() {
         <h1>建立寵物資料</h1>
         {stepList[step]}
         {step !== 0 && step !== lastStep && (
-          <Button label="上一步" onClick={goToPrevStep} />
+          <Button label="上一步" onClick={goToPrevStep} variant="secondary" />
         )}
         {step === lastStep && (
           <Button label="開始使用" onClick={() => navigate("/")} />
