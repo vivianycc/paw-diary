@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Drawer, Select, Input } from "@geist-ui/core";
+import { Drawer, Select } from "@geist-ui/core";
 import dayjs from "dayjs";
 import { getFirebase } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { useAuth } from "../hooks/useAuth";
-
+import Button from "./Button";
+import Input from "./Input";
 const StyledDrawer = styled(Drawer)`
   form {
     display: flex;
@@ -13,11 +14,22 @@ const StyledDrawer = styled(Drawer)`
     gap: 24px;
   }
 
-  input[type="date"],
-  input[type="time"] {
-    padding: 12px;
+  .value-input {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    font-size: 14px;
+    > div {
+      flex: 1;
+    }
+  }
+  input {
     border-radius: 24px;
-    border: 1px solid var(--neutral-200);
+    width: 100%;
+  }
+  .button {
+    margin-bottom: 32px;
   }
 `;
 
@@ -67,20 +79,20 @@ export default function StatsMenu({ showDrawer, setShowDrawer, currentPet }) {
           <Select.Option value="breathRate">呼吸次數</Select.Option>
           <Select.Option value="heartRate">心率</Select.Option>
         </Select>
-        <input
+        <Input
           type="date"
           name="date"
           onChange={(e) => setDate(e.target.value)}
           value={date}
         />
         {statsType !== "weight" && (
-          <input
+          <Input
             type="time"
             value={time}
             onChange={(e) => setTime(e.target.value)}
           />
         )}
-        <div>
+        <div className="value-input">
           <Input
             name="value"
             value={value}
@@ -88,7 +100,7 @@ export default function StatsMenu({ showDrawer, setShowDrawer, currentPet }) {
           />
           {statsType !== "weight" ? <span>次/每分鐘</span> : <span>公斤</span>}
         </div>
-        <button type="submit">儲存</button>
+        <Button type="submit" label="儲存" />
       </form>
     </StyledDrawer>
   );

@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Tabs } from "@geist-ui/core";
-import SegmentedControl from "../components/SegmentedControl";
-import ActionButton from "../components/ActionButton";
-import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
-import StatsItem from "../components/StatsItem";
-import StatsMenu from "../components/StatsMenu";
-import StatsLineChart from "../components/StatsLineChart";
+import dayjs from "dayjs";
 import { useOutletContext } from "react-router-dom";
 import { onSnapshot, collection, query, orderBy } from "firebase/firestore";
 import { getFirebase } from "../firebase";
 import { useAuth } from "../hooks/useAuth";
+import StatsMenu from "../components/StatsMenu";
+import ActionButton from "../components/ActionButton";
+import StatsLineChart from "../components/StatsLineChart";
+import StatsItem from "../components/StatsItem";
+import SegmentedControl from "../components/SegmentedControl";
 
 const StyledStatsPage = styled.div`
   padding-top: 32px;

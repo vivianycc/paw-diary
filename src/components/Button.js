@@ -65,7 +65,7 @@ export default function Button({
     <StyledButton
       type={type}
       onClick={onClick}
-      className={className}
+      className={`button ${className}`}
       variant={variant}
       theme={theme}
       size={size}
