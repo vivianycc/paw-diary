@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Drawer, Select, Input } from "@geist-ui/core";
 import dayjs from "dayjs";
+import { getFirebase } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { useAuth } from "../hooks/useAuth";
 
 const StyledDrawer = styled(Drawer)`
   form {
@@ -18,16 +21,13 @@ const StyledDrawer = styled(Drawer)`
   }
 `;
 
-export default function StatsMenu({
-  showDrawer,
-  setShowDrawer,
-  setStats,
-  stats,
-}) {
+export default function StatsMenu({ showDrawer, setShowDrawer, currentPet }) {
   const [statsType, setStatsType] = useState("weight");
   const [value, setValue] = useState(0);
   const [date, setDate] = useState(dayjs().format("YYYY-MM-DD"));
   const [time, setTime] = useState(dayjs().format("HH:mm"));
+  const { firestore } = getFirebase();
+  const { user } = useAuth();
 
   useEffect(() => {
     setValue(0);
@@ -35,38 +35,21 @@ export default function StatsMenu({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const data = {
+      date: date,
+      [statsType]: +value,
+    };
 
-    let existedDate = stats.find((obj) => obj.date === date);
-
-    if (existedDate) {
-      setStats((prevState) => {
-        const newState = prevState.map((item) => {
-          if (item.date === date) {
-            return {
-              ...item,
-              [statsType]: +value,
-            };
-          }
-          return item;
-        });
-        return newState;
-      });
-    } else {
-      const newStats = [
-        ...stats,
-        {
-          date: date,
-          [statsType]: +value,
-        },
-      ];
-      newStats.sort((a, b) => {
-        return (
-          dayjs(a.date, "YYYY-MM-DD").valueOf() -
-          dayjs(b.date, "YYYY-MM-DD").valueOf()
-        );
-      });
-      setStats(newStats);
-    }
+    const docRef = doc(
+      firestore,
+      "users",
+      user.uid,
+      "pets",
+      currentPet,
+      "stats",
+      date
+    );
+    setDoc(docRef, data, { merge: true });
   };
   return (
     <StyledDrawer

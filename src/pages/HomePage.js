@@ -103,7 +103,7 @@ export default function HomePage() {
             />
           </div>
           <Nav />
-          <Outlet />
+          <Outlet context={currentPet} />
 
           <Drawer
             visible={showDrawer}

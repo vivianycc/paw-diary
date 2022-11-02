@@ -8,132 +8,47 @@ import isBetween from "dayjs/plugin/isBetween";
 import StatsItem from "../components/StatsItem";
 import StatsMenu from "../components/StatsMenu";
 import StatsLineChart from "../components/StatsLineChart";
-
-// const data = [
-//   {
-//     time: "2022/05/15",
-//     weight: 4.1,
-//     heartRate: 120,
-//     breathRate: 45,
-//   },
-//   {
-//     time: "2022/05/18",
-//     weight: 4.15,
-//     heartRate: 123,
-//     breathRate: 43,
-//   },
-//   {
-//     time: "2022/05/20",
-//     weight: 4.18,
-//     heartRate: 133,
-//     breathRate: 30,
-//   },
-
-//   {
-//     time: "2022/06/15",
-//     weight: 4.32,
-//     heartRate: 128,
-//     breathRate: 47,
-//   },
-//   {
-//     time: "2022/06/16",
-//     weight: 4.48,
-//     heartRate: 129,
-//     breathRate: 35,
-//   },
-//   {
-//     time: "2022/06/17",
-//     weight: 4.39,
-//     heartRate: 134,
-//     breathRate: 39,
-//   },
-//   {
-//     time: "2022/06/27",
-//     weight: 4.2,
-//     heartRate: 132,
-//     breathRate: 35,
-//   },
-//   {
-//     time: "2022/06/28",
-//     weight: 4.2,
-//     heartRate: 132,
-//     breathRate: 35,
-//   },
-//   {
-//     time: "2022/06/29",
-//     weight: 4.2,
-//     heartRate: 132,
-//     breathRate: 35,
-//   },
-//   {
-//     time: "2022/07/15",
-//     weight: 4.1,
-//     heartRate: 120,
-//     breathRate: 45,
-//   },
-//   {
-//     time: "2022/07/18",
-//     weight: 4.15,
-//     heartRate: 123,
-//     breathRate: 43,
-//   },
-//   {
-//     time: "2022/07/20",
-//     weight: 4.18,
-//     heartRate: 133,
-//     breathRate: 30,
-//   },
-
-//   {
-//     time: "2022/08/15",
-//     weight: 4.32,
-//     heartRate: 128,
-//     breathRate: 47,
-//   },
-//   {
-//     time: "2022/08/16",
-//     weight: 4.48,
-//     heartRate: 129,
-//     breathRate: 35,
-//   },
-//   {
-//     time: "2022/08/17",
-//     weight: 4.39,
-//     heartRate: 134,
-//     breathRate: 39,
-//   },
-//   {
-//     time: "2022/08/27",
-//     weight: 4.2,
-//     heartRate: 132,
-//     breathRate: 35,
-//   },
-//   {
-//     time: "2022/08/28",
-//     weight: 4.2,
-//     heartRate: 132,
-//     breathRate: 35,
-//   },
-//   {
-//     time: "2022/08/29",
-//     weight: 4.2,
-//     heartRate: 132,
-//     breathRate: 35,
-//   },
-// ];
+import { useOutletContext } from "react-router-dom";
+import { onSnapshot, collection, query, orderBy } from "firebase/firestore";
+import { getFirebase } from "../firebase";
+import { useAuth } from "../hooks/useAuth";
 
 const StyledStatsPage = styled.div`
   padding-top: 32px;
 `;
 
-export default function StatsPage({ stats, setStats }) {
+export default function StatsPage() {
   const [displayStats, setDisplayStats] = useState([]);
+  const [stats, setStats] = useState([]);
   const [showDrawer, setShowDrawer] = useState(false);
+  const currentPet = useOutletContext();
+  const { firestore } = getFirebase();
+  const { user } = useAuth();
   console.log(displayStats);
 
   useEffect(() => {
     setDisplayStats(stats);
   }, [stats]);
+
+  useEffect(() => {
+    const statsCol = collection(
+      firestore,
+      "users",
+      user.uid,
+      "pets",
+      currentPet,
+      "stats"
+    );
+    const q = query(statsCol, orderBy("date", "asc"));
+    const unSubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map((a) => a.data());
+      setStats(data);
+    });
+
+    return () => {
+      unSubscribe();
+    };
+  }, [currentPet, user.uid]);
 
   const segmentCallback = (value) => {
     setDisplayStats(getDaysAgo(value));
@@ -206,6 +121,7 @@ export default function StatsPage({ stats, setStats }) {
         setShowDrawer={setShowDrawer}
         stats={stats}
         setStats={setStats}
+        currentPet={currentPet}
       />
     </StyledStatsPage>
   );
