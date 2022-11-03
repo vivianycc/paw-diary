@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Nav from "../components/Nav";
-import { Search } from "react-feather";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { Drawer, Input, Modal, Tabs, Button } from "@geist-ui/core";
+import { Search } from "react-feather";
+import Nav from "../components/Nav";
 import FoodItem from "../components/FoodItem";
 import ActionButton from "../components/ActionButton";
 
@@ -31,6 +31,8 @@ export default function FoodPage(props) {
   const [showDrawer, setShowDrawer] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedFood, setSelectedFood] = useState(null);
+  const currentPet = useOutletContext();
+  console.log("currentpet at food page", currentPet);
   const closeHandler = (event) => {
     setShowModal(false);
     setSelectedFood(null);
@@ -83,7 +85,7 @@ export default function FoodPage(props) {
         onClose={() => setShowDrawer(false)}
         placement="bottom"
       >
-        <Link to="./search" state={{ from: "foods" }}>
+        <Link to="./search" state={{ from: "foods", currentPet: currentPet }}>
           <Input icon={<Search />} placeholder="搜尋食物名稱" />
         </Link>
         <Link to="./create">

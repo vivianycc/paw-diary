@@ -22,10 +22,12 @@ const { firestore } = getFirebase();
 
 export default function FoodSearch(props) {
   const foodAdded = props.foods.map((food) => food.food.id);
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useState("");
   const [foodData, setFoodData] = useState([]);
-  const { state } = useLocation();
+  const navigate = useNavigate();
+  const {
+    state: { currentPet, date, from },
+  } = useLocation();
 
   useEffect(() => {
     const foodsRef = collection(firestore, "foods");
@@ -42,14 +44,18 @@ export default function FoodSearch(props) {
   }, []);
 
   const renderResultItem = (food) => {
-    if (state.from === "foods") {
+    if (from === "foods") {
       return (
         <SearchResultItem
           food={food}
           key={food.id}
           actionLabel="加入最愛"
           disabled={foodAdded.includes(food.id)}
-          onClick={() => navigate("/foods/add", { state: { ...food } })}
+          onClick={() =>
+            navigate("/foods/add", {
+              state: { ...food, currentPet: currentPet },
+            })
+          }
         />
       );
     } else {
@@ -58,7 +64,15 @@ export default function FoodSearch(props) {
           food={food}
           key={food.id}
           actionLabel="加入紀錄"
-          onClick={() => navigate("/foods/records/add", { state: { ...food } })}
+          onClick={() =>
+            navigate("/foods/records/add", {
+              state: {
+                ...food,
+                currentPet: currentPet,
+                date: date,
+              },
+            })
+          }
         />
       );
     }

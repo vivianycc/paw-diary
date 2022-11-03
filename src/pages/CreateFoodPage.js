@@ -2,15 +2,11 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Select } from "@geist-ui/core";
-import Input from "../components/FoodInput";
 import { getFirebase } from "../firebase";
-import {
-  collection,
-  doc,
-  setDoc,
-  addDoc,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { useAuth } from "../hooks/useAuth";
+import Input from "../components/FoodInput";
+import Button from "../components/Button";
 
 const { firestore } = getFirebase();
 const foodsCol = collection(firestore, "foods");
@@ -19,6 +15,7 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   margin: 32px;
+  overflow: scroll;
 
   label[for="ingredient"],
   label[for="foodType"] {
@@ -54,6 +51,15 @@ const StyledForm = styled.form`
   textarea::placeholder {
     color: var(--neutral-300);
   }
+
+  .buttons {
+    display: flex;
+    gap: 16px;
+    margin: 24px 0;
+    > button {
+      flex: 1;
+    }
+  }
 `;
 
 export default function CreateFoodPage(props) {
@@ -85,6 +91,9 @@ export default function CreateFoodPage(props) {
     vite: "",
     nonMeatElement: [],
   });
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setFoodInfo({ ...foodInfo, [event.target.name]: event.target.value });
@@ -145,6 +154,7 @@ export default function CreateFoodPage(props) {
       iodine: Number(iodine),
       vite: Number(vite),
       nonMeatElement: [],
+      createdBy: user.uid,
     };
     const foodToAdd = doc(foodsCol);
     setDoc(foodToAdd, newFoodInfo);
@@ -177,10 +187,9 @@ export default function CreateFoodPage(props) {
       vite: "",
       nonMeatElement: [],
     });
-    // navigate("/foods");
+    navigate("/foods");
   };
 
-  const navigate = useNavigate();
   return (
     <StyledForm onSubmit={handleSubmit} className="food-form">
       <Input
@@ -353,8 +362,9 @@ export default function CreateFoodPage(props) {
         onChange={handleChange}
         placeholder="0.06"
       />
-      <div>
-        <button>送出</button>
+      <div className="buttons">
+        <Button label="返回上一頁" variant="secondary" />
+        <Button label="送出" type="submit" />
       </div>
     </StyledForm>
   );

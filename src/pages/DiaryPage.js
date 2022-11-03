@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-tw";
@@ -11,6 +11,8 @@ import FoodRecordItem from "../components/FoodRecordItem";
 import MenuItem from "../components/MenuItem";
 import ActionButton from "../components/ActionButton";
 import { getFirebase } from "../firebase";
+import { onSnapshot, doc } from "firebase/firestore";
+import { useAuth } from "../hooks/useAuth";
 
 const StyledPage = styled.div`
   height: 100%;
@@ -66,24 +68,33 @@ export default function DiaryPage(props) {
   const [showModal, setShowModal] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const navigate = useNavigate();
-  const { auth } = getFirebase();
+  const { firestore } = getFirebase();
+  const { user } = useAuth();
+  const currentPet = useOutletContext();
+  const diaryCol = doc(
+    firestore,
+    "users",
+    user.uid,
+    "pets",
+    currentPet,
+    "diaries",
+    selectedDay.format("YYYY-MM-DD")
+  );
 
   useEffect(() => {
-    const filtered = props.diaries.filter((entry) => {
-      if (
-        dayjs(entry.date).format("YYYY/MM/DD") ===
-        selectedDay.format("YYYY/MM/DD")
-      ) {
-        return entry;
+    const unsubscribe = onSnapshot(diaryCol, (doc) => {
+      console.log(doc.data());
+      if (doc.data()) {
+        setSelectedDayData(doc.data());
+      } else {
+        setSelectedDayData({});
       }
     });
 
-    if (filtered.length > 0) {
-      setSelectedDayData(...filtered);
-    } else {
-      setSelectedDayData([]);
-    }
-  }, [props.diaries, selectedDay]);
+    return () => {
+      unsubscribe();
+    };
+  }, [selectedDay]);
 
   const renderEmptyContent = () => {
     return <div className="empty-message">今天還沒有紀錄 </div>;
@@ -123,7 +134,7 @@ export default function DiaryPage(props) {
         />
       </div>
       <div className="content">
-        {Object.keys(selectedDayData).length === 0
+        {selectedDayData == null || Object.keys(selectedDayData).length === 0
           ? renderEmptyContent()
           : renderContent()}
       </div>
@@ -138,7 +149,13 @@ export default function DiaryPage(props) {
             icon={<Heart />}
             label="食物"
             onClick={() =>
-              navigate("/foods/search", { state: { from: "diary" } })
+              navigate("/foods/search", {
+                state: {
+                  from: "diary",
+                  currentPet: currentPet,
+                  date: selectedDay.format("YYYY-MM-DD"),
+                },
+              })
             }
           />
           <MenuItem icon={<Image />} label="照片" />

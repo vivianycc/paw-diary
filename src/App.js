@@ -6,39 +6,19 @@ import RequireAuth from "./components/RequireAuth";
 import HomePage from "./pages/HomePage";
 import FoodPage from "./pages/FoodPage";
 import StatsPage from "./pages/StatsPage";
-import FoodSearch from "./pages/FoodSearch";
+import DiaryPage from "./pages/DiaryPage";
+import SearchFoodPage from "./pages/SearchFoodPage";
 import CreateFoodPage from "./pages/CreateFoodPage";
 import AddFoodPage from "./pages/AddFoodPage";
-import DiaryPage from "./pages/DiaryPage";
 import AddFoodRecordPage from "./pages/AddFoodRecordPage";
 import ProfilePage from "./pages/ProfilePage";
-import CreatePetPage from "./pages/CreatePetPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import CreateFirstPetPage from "./pages/CreateFirstPetPage";
+import CreatePetPage from "./pages/CreatePetPage";
 
 function App() {
   const [foods, setFoods] = useState([]);
-  const [stats, setStats] = useState([
-    // {
-    //   date: "2022-06-15",
-    //   weight: 4.1,
-    //   heartRate: 120,
-    //   breathRate: 45,
-    // },
-    // {
-    //   date: "2022-06-18",
-    //   weight: 4.15,
-    //   heartRate: 123,
-    //   breathRate: 43,
-    // },
-    // {
-    //   date: "2022-08-20",
-    //   weight: 4.18,
-    //   heartRate: 133,
-    //   breathRate: 30,
-    // },
-  ]);
   const [diaries, setDiaries] = useState([
     {
       date: "2022/10/01",
@@ -135,10 +115,7 @@ function App() {
           >
             <Route index element={<DiaryPage diaries={diaries} />} />
             <Route path="foods" element={<FoodPage foods={foods} />} />
-            <Route
-              path="stats"
-              element={<StatsPage stats={stats} setStats={setStats} />}
-            />
+            <Route path="stats" element={<StatsPage />} />
           </Route>
           <Route
             path="profile"
@@ -162,7 +139,10 @@ function App() {
             path="/foods/add"
             element={<AddFoodPage foods={foods} addFoodHandler={setFoods} />}
           />
-          <Route path="foods/search" element={<FoodSearch foods={foods} />} />
+          <Route
+            path="foods/search"
+            element={<SearchFoodPage foods={foods} />}
+          />
           <Route path="login" element={<LoginPage />} />
           <Route path="signup" element={<SignupPage />} />
           <Route

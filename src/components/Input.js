@@ -29,7 +29,7 @@ export default function Input({
   className,
 }) {
   return (
-    <StyledInput className={className}>
+    <StyledInput className={`${className} input`}>
       {label && <label htmlFor={name}>{label}</label>}
       <input
         type={type}
