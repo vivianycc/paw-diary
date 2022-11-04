@@ -63,7 +63,7 @@ const StyledMenuItem = styled.div`
 `;
 
 export default function DiaryPage(props) {
-  const [selectedDay, setSelectedDay] = useState(dayjs());
+  const [selectedDay, setSelectedDay] = useState(dayjs().format("YYYY-MM-DD"));
   const [selectedDayData, setSelectedDayData] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
@@ -78,7 +78,7 @@ export default function DiaryPage(props) {
     "pets",
     currentPet,
     "diaries",
-    selectedDay.format("YYYY-MM-DD")
+    selectedDay
   );
 
   useEffect(() => {
@@ -122,10 +122,11 @@ export default function DiaryPage(props) {
         <CalendarView
           setSelectedDay={setSelectedDay}
           setShowModal={setShowModal}
+          selectedDay={selectedDay}
         />
       </Modal>
       <div className="header">
-        <h1>{`${selectedDay.locale("zh-tw").format("MMMD")}日`}</h1>
+        <h1>{`${dayjs(selectedDay).locale("zh-tw").format("MMMD")}日`}</h1>
         <IconButton
           icon={<Calendar />}
           color="var(--neutral-200)"
@@ -153,7 +154,7 @@ export default function DiaryPage(props) {
                 state: {
                   from: "diary",
                   currentPet: currentPet,
-                  date: selectedDay.format("YYYY-MM-DD"),
+                  date: selectedDay,
                 },
               })
             }

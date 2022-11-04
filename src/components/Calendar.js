@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-tw";
-import IconButton from "./IconButton";
 import { ChevronLeft, ChevronRight } from "react-feather";
-import { useEffect } from "react";
+import IconButton from "./IconButton";
+import Button from "./Button";
 
 const StyledCalendar = styled.div`
   padding: 24px;
@@ -14,6 +14,11 @@ const StyledCalendar = styled.div`
     align-items: center;
     justify-content: space-between;
     margin-bottom: 16px;
+  }
+
+  .button {
+    width: 100%;
+    margin-top: 24px;
   }
 `;
 
@@ -31,10 +36,19 @@ const DayButton = styled.button`
   border-radius: 100%;
   border: none;
   color: ${(props) =>
-    props.currentMonth ? "var(--neutral-700)" : "var(--neutral-300)"};
+    props.isSelectedDay
+      ? "#fff"
+      : props.currentMonth
+      ? "var(--neutral-700)"
+      : "var(--neutral-300)"};
   outline: none;
   background-color: ${(props) =>
-    props.isToday ? "var(-neutral-200)" : "transparent"};
+    props.isSelectedDay
+      ? "var(--neutral-700)"
+      : props.isToday
+      ? "var(--neutral-200)"
+      : "transparent"};
+
   &:hover {
     background-color: var(--neutral-200);
   }
@@ -58,6 +72,7 @@ const getMonth = (month = dayjs().month()) => {
 
 export default function Calendar({
   month = dayjs().month(),
+  selectedDay,
   setSelectedDay,
   setShowModal,
 }) {
@@ -70,6 +85,11 @@ export default function Calendar({
 
   const goToNextMonth = () => {
     setMonthIndex(monthIndex + 1);
+  };
+
+  const goToToday = () => {
+    setSelectedDay(dayjs().format("YYYY-MM-DD"));
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -102,15 +122,16 @@ export default function Calendar({
         ))}
         {monthGrid.map((week) => (
           <React.Fragment>
-            {week.map((day) => (
+            {week.map((day, i) => (
               <DayButton
-                key={day}
+                key={i}
                 currentMonth={
                   day.format("M") === dayjs().month(monthIndex).format("M")
                 }
                 isToday={dayjs().isSame(day, "day")}
+                isSelectedDay={dayjs(selectedDay).isSame(day, "day")}
                 onClick={() => {
-                  setSelectedDay(day);
+                  setSelectedDay(day.format("YYYY-MM-DD"));
                   setShowModal(false);
                 }}
               >
@@ -120,6 +141,7 @@ export default function Calendar({
           </React.Fragment>
         ))}
       </Grid>
+      <Button label="今天" onClick={goToToday} variant="secondary" />
     </StyledCalendar>
   );
 }
