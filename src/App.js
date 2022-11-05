@@ -16,6 +16,7 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import CreateFirstPetPage from "./pages/CreateFirstPetPage";
 import CreatePetPage from "./pages/CreatePetPage";
+import AddNotePage from "./pages/AddNotePage";
 
 function App() {
   const [foods, setFoods] = useState([]);
@@ -135,6 +136,7 @@ function App() {
               />
             }
           />
+          <Route path="diaries/note/add" element={<AddNotePage />} />
           <Route
             path="/foods/add"
             element={<AddFoodPage foods={foods} addFoodHandler={setFoods} />}

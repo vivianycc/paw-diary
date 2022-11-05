@@ -40,16 +40,23 @@ const sizeStyles = (size = "m") => {
 };
 
 const StyledButton = styled.button`
+  flex: 1;
   padding: 10px 16px;
-  color: "#fff";
-  background-color: "var(--neutral-700)";
   border-radius: 22px;
   outline: none;
   border: transparent;
+  color: "#fff";
+  background-color: "var(--neutral-700)";
   font-size: 14px;
 
   ${({ theme, variant }) => variantStyles(theme, variant)}
   ${({ size }) => sizeStyles(size)}
+`;
+
+const StyledBtns = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
 `;
 
 export default function Button({
@@ -74,3 +81,9 @@ export default function Button({
     </StyledButton>
   );
 }
+
+function ButtonGroup({ children }) {
+  return <StyledBtns>{children}</StyledBtns>;
+}
+
+Button.Group = ButtonGroup;

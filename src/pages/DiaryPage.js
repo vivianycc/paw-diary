@@ -110,9 +110,11 @@ export default function DiaryPage(props) {
           </div>
         ) : null}
         <h2>食物紀錄</h2>
-        {foodRecord.map((info) => (
-          <FoodRecordItem info={info} />
-        ))}
+        {foodRecord.length !== 0 ? (
+          foodRecord.map((info) => <FoodRecordItem info={info} />)
+        ) : (
+          <div className="empty-message">尚未添加食物紀錄</div>
+        )}
       </>
     );
   };
@@ -160,7 +162,18 @@ export default function DiaryPage(props) {
             }
           />
           <MenuItem icon={<Image />} label="照片" />
-          <MenuItem icon={<BookOpen />} label="日記" />
+          <MenuItem
+            icon={<BookOpen />}
+            label="日記"
+            onClick={() =>
+              navigate("diaries/note/add", {
+                state: {
+                  currentPet: currentPet,
+                  date: selectedDay,
+                },
+              })
+            }
+          />
           <MenuItem icon={<TrendingUp />} label="數據" />
         </StyledMenuItem>
       </Drawer>
