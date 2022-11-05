@@ -8,10 +8,10 @@ import { usePets } from "../hooks/usePets";
 import { useAuth } from "../hooks/useAuth";
 
 const StyledPage = styled.div`
-  height: 100vh;
-  padding: 32px;
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  padding: 32px;
   overflow: hidden;
   background-color: var(--neutral-100);
 
@@ -93,7 +93,7 @@ export default function HomePage() {
       {pets !== null && Object.keys(pets).length === 0 ? (
         renderNoPets()
       ) : (
-        <div>
+        <>
           <div className="pet-area">
             <PetItem pet={pets[currentPet]} className="current-pet" />
             <PetMenu
@@ -112,7 +112,7 @@ export default function HomePage() {
           >
             {renderPets()}
           </Drawer>
-        </div>
+        </>
       )}
     </StyledPage>
   );

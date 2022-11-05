@@ -15,10 +15,10 @@ import { onSnapshot, doc } from "firebase/firestore";
 import { useAuth } from "../hooks/useAuth";
 
 const StyledPage = styled.div`
-  height: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0;
   padding-top: 24px;
   .header {
     display: flex;
@@ -119,7 +119,7 @@ export default function DiaryPage(props) {
     );
   };
   return (
-    <StyledPage>
+    <StyledPage className="diary">
       <Modal visible={showModal} onClose={() => setShowModal(false)}>
         <CalendarView
           setSelectedDay={setSelectedDay}

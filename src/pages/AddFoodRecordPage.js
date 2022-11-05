@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { getFirebase } from "../firebase";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, getDoc } from "firebase/firestore";
 import { useAuth } from "../hooks/useAuth";
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -48,14 +49,13 @@ export default function AddFoodRecordPage() {
     portion: 30,
     time: dayjs().format("HH:mm"),
   });
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
   const { brand, product, flavor, calories, id, currentPet, date } =
     location.state;
   const { firestore } = getFirebase();
   const { user } = useAuth();
-
-  const docRef = doc(
+  const diaryDoc = doc(
     firestore,
     "users",
     user.uid,
@@ -65,25 +65,36 @@ export default function AddFoodRecordPage() {
     date
   );
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newDiary = {
-      foodRecord: [
-        {
-          foodBrand: brand,
-          foodProduct: product,
-          foodFlavor: flavor,
-          foodId: id,
-          calories: calories,
-          portion: form.portion,
-          time: form.time,
-        },
-      ],
+
+    const newRecord = {
+      foodBrand: brand,
+      foodProduct: product,
+      foodFlavor: flavor,
+      foodId: id,
+      calories: calories,
+      portion: form.portion,
+      time: form.time,
     };
 
-    setDoc(docRef, newDiary, { merge: true }).then(() => {
-      navigate("/");
-    });
+    const docSnap = await getDoc(diaryDoc);
+
+    if (docSnap.exists()) {
+      dayjs.extend(customParseFormat);
+      const prevRecord = docSnap.data().foodRecord;
+      const newRecords = [...prevRecord, newRecord].sort((a, b) =>
+        dayjs(a.time, "HH:mm").isAfter(dayjs(b.time, "HH:mm")) ? 1 : -1
+      );
+
+      setDoc(diaryDoc, { foodRecord: newRecords }, { merge: true }).then(
+        navigate("/")
+      );
+    } else {
+      setDoc(diaryDoc, { foodRecord: [newRecord] }, { merge: true }).then(
+        navigate("/")
+      );
+    }
   };
 
   const handleChange = (e) => {
