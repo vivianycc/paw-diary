@@ -131,8 +131,14 @@ export default function AddFoodRecordPage() {
           />
           <p>公克</p>
         </div>
-
-        <Button type="submit" label="送出" />
+        <Button.Group>
+          <Button
+            label="取消"
+            variant="secondary"
+            onClick={() => navigate("/")}
+          />
+          <Button type="submit" label="送出" />
+        </Button.Group>
       </form>
     </StyledPage>
   );

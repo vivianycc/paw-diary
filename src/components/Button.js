@@ -40,7 +40,6 @@ const sizeStyles = (size = "m") => {
 };
 
 const StyledButton = styled.button`
-  flex: 1;
   padding: 10px 16px;
   border-radius: 22px;
   outline: none;
@@ -57,6 +56,9 @@ const StyledBtns = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+  .button {
+    flex: 1;
+  }
 `;
 
 export default function Button({
