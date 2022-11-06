@@ -101,7 +101,7 @@ export default function ProfilePage() {
       </div>
       <div className="pets-body">
         {Object.keys(pets).length === 0 ? (
-          <div class="empty-message">沒有寵物資料，快新增一個吧</div>
+          <div className="empty-message">沒有寵物資料，快新增一個吧</div>
         ) : (
           Object.values(pets).map((pet) => (
             <PetItem key={pet.name} pet={pet} bg />
