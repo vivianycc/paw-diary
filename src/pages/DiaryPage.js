@@ -71,17 +71,18 @@ export default function DiaryPage(props) {
   const { firestore } = getFirebase();
   const { user } = useAuth();
   const currentPet = useOutletContext();
-  const diaryCol = doc(
-    firestore,
-    "users",
-    user.uid,
-    "pets",
-    currentPet,
-    "diaries",
-    selectedDay
-  );
 
   useEffect(() => {
+    const diaryCol = doc(
+      firestore,
+      "users",
+      user.uid,
+      "pets",
+      currentPet,
+      "diaries",
+      selectedDay
+    );
+
     const unsubscribe = onSnapshot(diaryCol, (doc) => {
       console.log(doc.data());
       if (doc.data()) {
@@ -94,7 +95,7 @@ export default function DiaryPage(props) {
     return () => {
       unsubscribe();
     };
-  }, [selectedDay]);
+  }, [selectedDay, currentPet]);
 
   const renderEmptyContent = () => {
     return <div className="empty-message">今天還沒有紀錄 </div>;
