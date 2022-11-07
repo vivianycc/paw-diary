@@ -12,6 +12,7 @@ const StyledDiv = styled.div`
     width: 100%;
     padding: 16px;
     border-radius: 16px;
+    resize: none;
   }
 `;
 
@@ -25,7 +26,7 @@ export default function Textarea({
   onChange,
 }) {
   return (
-    <StyledDiv>
+    <StyledDiv className={`${className || ""} textarea`}>
       {label && (
         <label htmlFor={name} className="label">
           {label}
@@ -37,7 +38,6 @@ export default function Textarea({
         cols="30"
         rows="10"
         placeholder={placeholder}
-        className={`${className} textarea`}
         required={required}
         onChange={onChange}
         value={value}

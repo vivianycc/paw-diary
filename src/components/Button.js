@@ -74,7 +74,7 @@ export default function Button({
     <StyledButton
       type={type}
       onClick={onClick}
-      className={`button ${className}`}
+      className={`button ${className || ""}`}
       variant={variant}
       theme={theme}
       size={size}
@@ -85,7 +85,7 @@ export default function Button({
 }
 
 function ButtonGroup({ children }) {
-  return <StyledBtns>{children}</StyledBtns>;
+  return <StyledBtns className="button-group">{children}</StyledBtns>;
 }
 
 Button.Group = ButtonGroup;
