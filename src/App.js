@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { ProvideAuth } from "./hooks/useAuth";
-import { usePets } from "./hooks/usePets";
 import RequireAuth from "./components/RequireAuth";
 import HomePage from "./pages/HomePage";
 import FoodPage from "./pages/FoodPage";
@@ -14,8 +13,8 @@ import AddFoodRecordPage from "./pages/AddFoodRecordPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-import CreateFirstPetPage from "./pages/CreateFirstPetPage";
 import CreatePetPage from "./pages/CreatePetPage";
+import EditPetPage from "./pages/EditPetPage";
 import AddNotePage from "./pages/AddNotePage";
 
 function App() {
@@ -148,18 +147,18 @@ function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="signup" element={<SignupPage />} />
           <Route
-            path="pets/create"
+            path="pets/edit"
             element={
               <RequireAuth>
-                <CreatePetPage />
+                <EditPetPage />
               </RequireAuth>
             }
           />
           <Route
-            path="signup/setup"
+            path="pets/create"
             element={
               <RequireAuth>
-                <CreateFirstPetPage />
+                <CreatePetPage />
               </RequireAuth>
             }
           />

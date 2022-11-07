@@ -1,161 +1,241 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { getFirebase } from "../firebase";
-import { setDoc, doc } from "firebase/firestore";
-import { useAuth } from "../hooks/useAuth";
+import Input from "../components/Input";
 import RadioButton from "../components/RadioButton";
 import Button from "../components/Button";
-import Input from "../components/Input";
+import { usePets } from "../hooks/usePets";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { getFirebase } from "../firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { useEffect } from "react";
 
 const StyledPage = styled.div`
-  padding: 24px;
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  padding: 32px;
+  h1 {
+    margin-bottom: 80px;
+  }
   form {
     display: flex;
     flex-direction: column;
     gap: 24px;
+    width: 100%;
   }
-
-  .avatar {
-    height: 72px;
-    width: 72px;
+  .upload-avatar {
+    height: 100px;
+    width: 100px;
     border-radius: 100%;
-    background-color: var(--neutral-300);
+    background-color: var(--neutral-200);
   }
 `;
 
-export default function CreatePetPage() {
+const Step0 = ({ handleChange, formData: { name, species } }) => {
+  return (
+    <>
+      <Input
+        label="名字"
+        name="name"
+        value={name}
+        onChange={handleChange}
+        placeholder="請輸入名字"
+        required
+      />
+      <RadioButton.Group>
+        <RadioButton
+          label="貓"
+          name="species"
+          value="cat"
+          onChange={handleChange}
+          checked={species === "cat"}
+          required
+        />
+
+        <RadioButton
+          label="狗"
+          name="species"
+          id="dog"
+          value="dog"
+          checked={species === "dog"}
+          onChange={handleChange}
+          required
+        />
+      </RadioButton.Group>
+    </>
+  );
+};
+
+const Step1 = ({ handleChange, formData: { sex, birthday } }) => {
+  return (
+    <>
+      <RadioButton.Group>
+        <RadioButton
+          label="公"
+          name="sex"
+          value="male"
+          checked={sex === "male"}
+          onChange={handleChange}
+          required
+        />
+
+        <RadioButton
+          label="母"
+          name="sex"
+          id="female"
+          value="female"
+          checked={sex === "female"}
+          onChange={handleChange}
+          required
+        />
+      </RadioButton.Group>
+
+      <Input
+        label="出生日期"
+        type="date"
+        name="birthday"
+        value={birthday}
+        onChange={handleChange}
+      />
+    </>
+  );
+};
+
+const Step2 = ({ handleFile, uploadFile, photoUrl }) => {
+  console.log("check", photoUrl);
+  return (
+    <>
+      <input type="file" onChange={(e) => handleFile(e)} />
+      <div
+        className="upload-avatar"
+        style={{
+          backgroundImage: `url(${photoUrl})`,
+          backgroundSize: "contain",
+        }}
+      >
+        upload photo
+      </div>
+      <button onClick={uploadFile}>UPload</button>
+    </>
+  );
+};
+
+const LastStep = () => {
+  return <div>已完成！</div>;
+};
+
+export default function CreateFirstPetPage() {
   const [form, setForm] = useState({
     name: "",
-    species: "",
-    breed: "",
-    birthday: "",
-    neutered: "",
-    chipNumber: "",
     sex: "",
+    birthday: "",
+    species: "",
+    photoUrl: "",
   });
-  const navigate = useNavigate();
-  const { firestore } = getFirebase();
-  const { user } = useAuth();
+  const [file, setFile] = useState("");
 
-  const handleInput = (e) => {
+  const [step, setStep] = useState(0);
+
+  const { user } = useAuth();
+  const { createPet } = usePets(user.uid);
+  const { storage } = getFirebase();
+
+  const navigate = useNavigate();
+
+  const goToNextStep = () => {
+    setStep((prev) => prev + 1);
+  };
+
+  const goToPrevStep = () => {
+    setStep((prev) => prev - 1);
+  };
+
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleFile = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const uploadFile = () => {
+    let fileExt = file.type.substring(
+      file.type.lastIndexOf("/") + 1,
+      file.type.length
+    );
+
+    const storageRef = ref(
+      storage,
+      `${user.uid}/${form.name}/profile.${fileExt}`
+    );
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        console.log(progress);
+      },
+      (error) => {
+        alert(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setForm({ ...form, photoUrl: downloadURL });
+        });
+      }
+    );
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     createPet(form);
-    navigate("/profile");
-  };
-  const handleCancel = () => {
-    navigate("/profile");
+    goToNextStep();
   };
 
-  const createPet = async (data) => {
-    const petRef = doc(firestore, "users", user.uid, "pets", form.name);
-    const docRef = await setDoc(petRef, data);
-  };
+  useEffect(() => {
+    console.log("auto upload!");
+    if (file) {
+      uploadFile();
+    }
+  }, [file]);
 
-  const { name, breed, species, birthday, neutered, chipNumber, sex } = form;
+  useEffect(() => {
+    console.log(form.photoUrl);
+  }, [form.photoUrl]);
+
+  const stepList = [
+    <Step0 formData={form} handleChange={handleChange} />,
+    <Step1 formData={form} handleChange={handleChange} />,
+    <Step2
+      handleFile={handleFile}
+      uploadFile={uploadFile}
+      photoUrl={form.photoUrl}
+    />,
+    <LastStep />,
+  ];
+
+  const lastStep = stepList.length - 1;
+  const formCompleted = lastStep - 1;
+
   return (
     <StyledPage>
       <form onSubmit={handleSubmit}>
-        <div>
-          <div className="avatar"></div>
-        </div>
-
-        <Input
-          label="名字"
-          name="name"
-          value={name}
-          onChange={handleInput}
-          placeholder="請輸入名字"
-          required
-        />
-        <RadioButton.Group>
-          <RadioButton
-            label="貓"
-            name="species"
-            value="cat"
-            onChange={handleInput}
-            checked={species === "cat"}
-            required
-          />
-
-          <RadioButton
-            label="狗"
-            name="species"
-            id="dog"
-            value="dog"
-            checked={species === "dog"}
-            onChange={handleInput}
-            required
-          />
-        </RadioButton.Group>
-
-        <Input
-          label="品種"
-          name="breed"
-          value={breed}
-          onChange={handleInput}
-          placeholder="請輸入品種"
-        />
-
-        <RadioButton.Group>
-          <RadioButton
-            label="公"
-            name="sex"
-            value="male"
-            checked={sex === "male"}
-            onChange={handleInput}
-            required
-          />
-
-          <RadioButton
-            label="母"
-            name="sex"
-            id="female"
-            value="female"
-            checked={sex === "female"}
-            onChange={handleInput}
-            required
-          />
-        </RadioButton.Group>
-
-        <Input
-          label="出生日期"
-          type="date"
-          name="birthday"
-          value={birthday}
-          onChange={handleInput}
-        />
-        <RadioButton.Group>
-          <RadioButton
-            label="已結紮"
-            name="neutered"
-            value={true}
-            checked={!!neutered}
-            onChange={handleInput}
-          />
-          <RadioButton
-            label="未結紮"
-            name="neutered"
-            value={false}
-            checked={!!neutered}
-            onChange={handleInput}
-          />
-        </RadioButton.Group>
-
-        <Input
-          label="晶片號碼"
-          name="chipNumber"
-          value={chipNumber}
-          onChange={handleInput}
-          placeholder="請輸入晶片號碼"
-        />
-
-        <Button label="送出" type="submit" />
-        <Button label="取消變更" onClick={handleCancel} variant="secondary" />
+        <h1>建立寵物資料</h1>
+        {stepList[step]}
+        {step !== 0 && step !== lastStep && (
+          <Button label="上一步" onClick={goToPrevStep} variant="secondary" />
+        )}
+        {step === lastStep && (
+          <Button label="開始使用" onClick={() => navigate("/")} />
+        )}
+        {step === formCompleted && <Button label="送出" type="submit" />}
+        {step < formCompleted && (
+          <Button label="下一步" onClick={goToNextStep} />
+        )}
       </form>
     </StyledPage>
   );

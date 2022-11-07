@@ -1,6 +1,7 @@
 import { initializeApp, getApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getStorage, connectStorageEmulator } from "firebase/storage";
 
 import { config } from "./config";
 
@@ -18,12 +19,15 @@ export function getFirebase() {
 
   const firestore = getFirestore(firebaseApp);
 
-  return { firebaseApp, auth, firestore };
+  const storage = getStorage(firebaseApp);
+
+  return { firebaseApp, auth, firestore, storage };
 }
 
-function connectToEmulators({ firebaseApp, auth, firestore }) {
+function connectToEmulators({ firebaseApp, auth, firestore, storage }) {
   connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
   connectFirestoreEmulator(firestore, "127.0.0.1", 8088);
+  connectStorageEmulator(storage, "127.0.0.1", 9199);
   return { firebaseApp, auth, firestore };
 }
 if (window.location.hostname === "localhost") {
