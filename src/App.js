@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { ProvideAuth } from "./hooks/useAuth";
+import { CurrentPetProvider } from "./hooks/useCurrentPet";
 import RequireAuth from "./components/RequireAuth";
 import HomePage from "./pages/HomePage";
 import FoodPage from "./pages/FoodPage";
@@ -104,65 +105,67 @@ function App() {
   return (
     <div className="App">
       <ProvideAuth>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <RequireAuth>
-                <HomePage />
-              </RequireAuth>
-            }
-          >
-            <Route index element={<DiaryPage diaries={diaries} />} />
-            <Route path="foods" element={<FoodPage foods={foods} />} />
-            <Route path="stats" element={<StatsPage />} />
-          </Route>
-          <Route
-            path="profile"
-            element={
-              <RequireAuth>
-                <ProfilePage />
-              </RequireAuth>
-            }
-          />
-          <Route path="foods/create" element={<CreateFoodPage />} />
-          <Route
-            path="foods/records/add"
-            element={
-              <AddFoodRecordPage
-                diaries={diaries}
-                addfoodRecordHandler={setDiaries}
-              />
-            }
-          />
-          <Route path="diaries/note/add" element={<AddNotePage />} />
-          <Route
-            path="/foods/add"
-            element={<AddFoodPage foods={foods} addFoodHandler={setFoods} />}
-          />
-          <Route
-            path="foods/search"
-            element={<SearchFoodPage foods={foods} />}
-          />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="signup" element={<SignupPage />} />
-          <Route
-            path="pets/edit"
-            element={
-              <RequireAuth>
-                <EditPetPage />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="pets/create"
-            element={
-              <RequireAuth>
-                <CreatePetPage />
-              </RequireAuth>
-            }
-          />
-        </Routes>
+        <CurrentPetProvider>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <RequireAuth>
+                  <HomePage />
+                </RequireAuth>
+              }
+            >
+              <Route index element={<DiaryPage diaries={diaries} />} />
+              <Route path="foods" element={<FoodPage foods={foods} />} />
+              <Route path="stats" element={<StatsPage />} />
+            </Route>
+            <Route
+              path="profile"
+              element={
+                <RequireAuth>
+                  <ProfilePage />
+                </RequireAuth>
+              }
+            />
+            <Route path="foods/create" element={<CreateFoodPage />} />
+            <Route
+              path="foods/records/add"
+              element={
+                <AddFoodRecordPage
+                  diaries={diaries}
+                  addfoodRecordHandler={setDiaries}
+                />
+              }
+            />
+            <Route path="diaries/note/add" element={<AddNotePage />} />
+            <Route
+              path="/foods/add"
+              element={<AddFoodPage foods={foods} addFoodHandler={setFoods} />}
+            />
+            <Route
+              path="foods/search"
+              element={<SearchFoodPage foods={foods} />}
+            />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="signup" element={<SignupPage />} />
+            <Route
+              path="pets/edit"
+              element={
+                <RequireAuth>
+                  <EditPetPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="pets/create"
+              element={
+                <RequireAuth>
+                  <CreatePetPage />
+                </RequireAuth>
+              }
+            />
+          </Routes>
+        </CurrentPetProvider>
       </ProvideAuth>
     </div>
   );

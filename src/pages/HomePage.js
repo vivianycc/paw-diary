@@ -6,6 +6,8 @@ import { Avatar, Drawer } from "@geist-ui/core";
 import PetItem from "../components/PetItem";
 import { usePets } from "../hooks/usePets";
 import { useAuth } from "../hooks/useAuth";
+import useCurrentPet from "../hooks/useCurrentPet";
+import { useEffect } from "react";
 
 const StyledPage = styled.div`
   display: flex;
@@ -55,7 +57,14 @@ const PetMenu = ({ currentPet, pets, onClick }) => {
 export default function HomePage() {
   const [showDrawer, setShowDrawer] = useState(false);
   const { user } = useAuth();
-  const { pets, currentPet, setCurrentPet } = usePets(user.uid);
+  const { pets } = usePets(user.uid);
+  const { setCurrentPet, currentPet } = useCurrentPet();
+
+  useEffect(() => {
+    if (pets && currentPet === "") {
+      setCurrentPet(Object.keys(pets)[0]);
+    }
+  }, [pets]);
 
   const handleCurrentPet = (pet) => {
     setCurrentPet(pet);
@@ -85,7 +94,7 @@ export default function HomePage() {
   const Loading = () => {
     return <div>Loading...</div>;
   };
-  if (pets === null) {
+  if (pets === null || currentPet === "") {
     return <Loading />;
   }
   return (
@@ -104,7 +113,6 @@ export default function HomePage() {
           </div>
           <Nav />
           <Outlet context={currentPet} />
-
           <Drawer
             visible={showDrawer}
             onClose={() => setShowDrawer(false)}

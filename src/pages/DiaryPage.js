@@ -13,6 +13,7 @@ import ActionButton from "../components/ActionButton";
 import { getFirebase } from "../firebase";
 import { onSnapshot, doc } from "firebase/firestore";
 import { useAuth } from "../hooks/useAuth";
+import useCurrentPet from "../hooks/useCurrentPet";
 
 const StyledPage = styled.div`
   flex: 1;
