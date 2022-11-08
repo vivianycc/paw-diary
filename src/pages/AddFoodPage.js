@@ -1,31 +1,74 @@
 import { useState } from "react";
+import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Textarea, Rating } from "@geist-ui/core";
+import { Rating } from "@geist-ui/core";
+import { getFirebase } from "../firebase";
+import { setDoc, doc } from "firebase/firestore";
+import { useAuth } from "../hooks/useAuth";
+import Textarea from "../components/Textarea";
+import Button from "../components/Button";
+import FoodNutrition from "../components/FoodNutrition";
 
-export default function AddFoodPage(props) {
+const StyledPage = styled.div`
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  padding: 32px;
+  background-color: var(--neutral-100);
+  overflow-y: scroll;
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    width: 100%;
+
+    .textarea {
+      width: 100%;
+      height: 100px;
+    }
+
+    .button-group {
+      width: 100%;
+    }
+  }
+`;
+export default function AddFoodPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { brand } = state;
+  const { brand, id, currentPet } = state;
   const [rating, setRating] = useState(0);
   const [, setRatingLocked] = useState(false);
   const [comment, setComment] = useState("");
+  const { user } = useAuth();
+  const { firestore } = getFirebase();
 
-  const handleSubmit = () => {
+  const foodDoc = doc(
+    firestore,
+    "users",
+    user.uid,
+    "pets",
+    currentPet,
+    "foods",
+    id
+  );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const newFood = {
       food: { ...state },
-      id: Math.floor(Math.random() * 10000000),
       rating: rating,
       comment: comment,
     };
-    props.addFoodHandler([...props.foods, newFood]);
+    setDoc(foodDoc, newFood, { merge: true });
+
     navigate("/foods");
-    console.log("hi");
   };
   return (
-    <div>
-      <p>{brand}</p>
-
+    <StyledPage>
       <form onSubmit={handleSubmit}>
+        <p>{brand}</p>
+        <FoodNutrition {...state} />
         <Rating
           onLockedChange={setRatingLocked}
           value={rating}
@@ -35,8 +78,15 @@ export default function AddFoodPage(props) {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
-        <button>加入</button>
+        <Button.Group>
+          <Button
+            label="取消"
+            variant="secondary"
+            onClick={() => navigate("/foods")}
+          />
+          <Button label="加入" type="submit" />
+        </Button.Group>
       </form>
-    </div>
+    </StyledPage>
   );
 }

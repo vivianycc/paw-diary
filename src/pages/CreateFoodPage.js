@@ -232,7 +232,8 @@ export default function CreateFoodPage(props) {
           value={foodInfo.foodType}
           onChange={handleFoodTypeSelect}
         >
-          <Select.Option value="main">主食</Select.Option>
+          <Select.Option value="complete">主食</Select.Option>
+          <Select.Option value="complementary">副食</Select.Option>
           <Select.Option value="treat">零食</Select.Option>
           <Select.Option value="supplement">營養品</Select.Option>
         </Select>

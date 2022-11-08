@@ -6,24 +6,34 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import SearchResultItem from "../components/SearchResultItem";
 import IconButton from "../components/IconButton";
 import { getFirebase } from "../firebase";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, getDoc, getDocs, onSnapshot } from "firebase/firestore";
 import { useEffect } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 const StyledFoodSearch = styled.div`
-  margin: 32px;
+  width: 100%;
+  height: 100vh;
+  padding: 32px;
+  background-color: var(--neutral-100);
+
   .search-bar {
     display: flex;
     align-items: center;
     margin-bottom: 24px;
+    .input-wrapper {
+      background-color: #fff;
+    }
   }
 `;
 
 const { firestore } = getFirebase();
 
 export default function FoodSearch(props) {
-  const foodAdded = props.foods.map((food) => food.food.id);
+  // const foodAdded = props.foods.map((food) => food.food.id);
   const [searchParams, setSearchParams] = useState("");
   const [foodData, setFoodData] = useState([]);
+  const [foodAdded, setFoodAdded] = useState([]);
+  const { user } = useAuth();
   const navigate = useNavigate();
   const {
     state: { currentPet, date, from },
@@ -31,7 +41,7 @@ export default function FoodSearch(props) {
 
   useEffect(() => {
     const foodsRef = collection(firestore, "foods");
-    onSnapshot(foodsRef, (snapshot) => {
+    const unsubscribe = onSnapshot(foodsRef, (snapshot) => {
       const data = snapshot.docs.map((doc) => {
         const id = doc.id;
         return {
@@ -41,7 +51,30 @@ export default function FoodSearch(props) {
       });
       setFoodData(data);
     });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      const getAddedFood = async () => {
+        const foodAddedRef = collection(
+          firestore,
+          "users",
+          user.uid,
+          "pets",
+          currentPet,
+          "foods"
+        );
+        const data = await getDocs(foodAddedRef);
+        const foodIds = data.docs.map((doc) => doc.data().food.id);
+        setFoodAdded(foodIds);
+      };
+      getAddedFood();
+    }
+  }, [user]);
 
   const renderResultItem = (food) => {
     if (from === "foods") {
@@ -78,10 +111,15 @@ export default function FoodSearch(props) {
     }
   };
 
+  if (user == null) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <StyledFoodSearch>
       <div className="search-bar">
         <Link to="/foods">
+          {console.log("added", foodAdded)}
           <IconButton
             size="40"
             color="transparent"

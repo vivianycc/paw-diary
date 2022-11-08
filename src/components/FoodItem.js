@@ -32,13 +32,20 @@ const StyledFoodItem = styled.div`
   }
 `;
 
+const foodTypeList = {
+  complete: "主食",
+  treat: "零食",
+  complementary: "副食",
+  supplement: "保健品",
+};
+
 export default function FoodItem({ food, rating, comment, onClick }) {
   return (
     <StyledFoodItem onClick={onClick}>
       <p className="brand">{food.brand}</p>
       <p className="flavor">{food.flavor}</p>
       <Rating value={rating} />
-      <span className="tag">{food.type || "主食"}</span>
+      <span className="tag">{foodTypeList[food.foodType] || "主食"}</span>
     </StyledFoodItem>
   );
 }
