@@ -10,6 +10,7 @@ const StyledDiv = styled.div`
   }
   textarea {
     width: 100%;
+    height: 100%;
     padding: 16px;
     border-radius: 16px;
     resize: none;
