@@ -75,6 +75,10 @@ export default function ProfilePage() {
   const handleCreatePet = () => {
     navigate("/pets/create");
   };
+  const handleEditPet = (pet) => {
+    navigate("/pets/edit", { state: { pet: pet } });
+    console.log(pet);
+  };
 
   const Loading = () => {
     return <div>Loading</div>;
@@ -104,7 +108,12 @@ export default function ProfilePage() {
           <div className="empty-message">沒有寵物資料，快新增一個吧</div>
         ) : (
           Object.values(pets).map((pet) => (
-            <PetItem key={pet.name} pet={pet} bg />
+            <PetItem
+              key={pet.name}
+              pet={pet}
+              bg
+              action={() => handleEditPet(pet)}
+            />
           ))
         )}
       </div>

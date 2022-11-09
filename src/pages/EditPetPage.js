@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getFirebase } from "../firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { ref, uploadBytesResumable } from "firebase/storage";
@@ -8,6 +8,8 @@ import { useAuth } from "../hooks/useAuth";
 import RadioButton from "../components/RadioButton";
 import Button from "../components/Button";
 import Input from "../components/Input";
+import uploadFile from "./uploadFile";
+import { useEffect } from "react";
 
 const StyledPage = styled.div`
   padding: 24px;
@@ -22,24 +24,31 @@ const StyledPage = styled.div`
     width: 72px;
     border-radius: 100%;
     background-color: var(--neutral-300);
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 `;
 
 export default function CreatePetPage() {
+  const {
+    state: { pet },
+  } = useLocation();
   const [form, setForm] = useState({
-    avatar: "",
-    name: "",
-    species: "",
-    breed: "",
-    birthday: "",
-    neutered: "",
-    chipNumber: "",
-    sex: "",
+    photoUrl: pet.photoUrl || "",
+    name: pet.name || "",
+    species: pet.species || "",
+    breed: pet.breed || "",
+    birthday: pet.birthday || "",
+    neutered: pet.neutered || "",
+    chipNumber: pet.chipNumber || "",
+    sex: pet.sex || "",
   });
 
   const [file, setFile] = useState("");
 
   const navigate = useNavigate();
+
+  console.log("pet from location", pet);
   const { firestore, storage } = getFirebase();
   const { user } = useAuth();
 
@@ -54,6 +63,12 @@ export default function CreatePetPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const createPet = async (data) => {
+      const petRef = doc(firestore, "users", user.uid, "pets", form.name);
+      setDoc(petRef, data, { merge: true });
+    };
+
     createPet(form);
     navigate("/profile");
   };
@@ -61,27 +76,23 @@ export default function CreatePetPage() {
     navigate("/profile");
   };
 
-  const handleUpload = () => {
-    if (!file) {
-      alert("Please select a file");
+  useEffect(() => {
+    const setPhotoUrl = (url) => setForm({ ...form, photoUrl: url });
+    if (file) {
+      uploadFile(file, `${user.uid}/${form.name}`, "profile", setPhotoUrl);
     }
-    const storageRef = ref(storage, `${user.uid}/photos/123`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-  };
-
-  const createPet = async (data) => {
-    const petRef = doc(firestore, "users", user.uid, "pets", form.name);
-    setDoc(petRef, data);
-  };
+  }, [file]);
 
   const { name, breed, species, birthday, neutered, chipNumber, sex } = form;
   return (
     <StyledPage>
       <form onSubmit={handleSubmit}>
         <div>
-          <div className="avatar"></div>
+          <div
+            className="avatar"
+            style={{ backgroundImage: `url(${form.photoUrl})` }}
+          ></div>
           <input type="file" accept="image/*" onChange={(e) => handleFile(e)} />
-          <button onClick={handleUpload}>upload</button>
         </div>
 
         <Input

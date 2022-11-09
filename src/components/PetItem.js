@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { Avatar } from "@geist-ui/core";
 import dayjs from "dayjs";
+import IconButton from "./IconButton";
+import { Edit2 } from "react-feather";
 
 const StyledPet = styled.button`
   display: flex;
@@ -41,9 +43,12 @@ const StyledPet = styled.button`
   .avatar-group.other-pet-avatar {
     margin-left: auto;
   }
+  .icon-button {
+    margin-left: auto;
+  }
 `;
 
-export default function petItem({ pet, onClick, className, bg }) {
+export default function petItem({ pet, onClick, className, bg, action }) {
   const {
     name,
     species,
@@ -79,6 +84,10 @@ export default function petItem({ pet, onClick, className, bg }) {
           {weight && <span>{weight} kg</span>}
         </span>
       </div>
+
+      {action && (
+        <IconButton icon={<Edit2 />} variant="transparent" onClick={action} />
+      )}
     </StyledPet>
   );
 }
