@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { usePets } from "../hooks/usePets";
+import { useAuth } from "../hooks/useAuth";
 import Input from "../components/Input";
 import RadioButton from "../components/RadioButton";
 import Button from "../components/Button";
-import { usePets } from "../hooks/usePets";
-import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
-import { getFirebase } from "../firebase";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { useEffect } from "react";
+import uploadFile from "./uploadFile";
 
 const StyledPage = styled.div`
   display: flex;
@@ -139,7 +137,6 @@ export default function CreateFirstPetPage() {
 
   const { user } = useAuth();
   const { createPet } = usePets(user.uid);
-  const { storage } = getFirebase();
 
   const navigate = useNavigate();
 
@@ -159,37 +156,6 @@ export default function CreateFirstPetPage() {
     setFile(e.target.files[0]);
   };
 
-  const uploadFile = () => {
-    let fileExt = file.type.substring(
-      file.type.lastIndexOf("/") + 1,
-      file.type.length
-    );
-
-    const storageRef = ref(
-      storage,
-      `${user.uid}/${form.name}/profile.${fileExt}`
-    );
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        );
-        console.log(progress);
-      },
-      (error) => {
-        alert(error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setForm({ ...form, photoUrl: downloadURL });
-        });
-      }
-    );
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     createPet(form);
@@ -197,15 +163,12 @@ export default function CreateFirstPetPage() {
   };
 
   useEffect(() => {
-    console.log("auto upload!");
     if (file) {
-      uploadFile();
+      const path = `${user.uid}/${form.name}/profile`;
+      const setUrl = (url) => setForm({ ...form, photoUrl: url });
+      uploadFile(file, path, setUrl);
     }
   }, [file]);
-
-  useEffect(() => {
-    console.log(form.photoUrl);
-  }, [form.photoUrl]);
 
   const stepList = [
     <Step0 formData={form} handleChange={handleChange} />,

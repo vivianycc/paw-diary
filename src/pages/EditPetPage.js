@@ -79,7 +79,7 @@ export default function CreatePetPage() {
   useEffect(() => {
     const setPhotoUrl = (url) => setForm({ ...form, photoUrl: url });
     if (file) {
-      uploadFile(file, `${user.uid}/${form.name}`, "profile", setPhotoUrl);
+      uploadFile(file, `${user.uid}/${form.name}/profile`, setPhotoUrl);
     }
   }, [file]);
 

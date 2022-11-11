@@ -3,13 +3,13 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 const { storage } = getFirebase();
 
-export default function uploadFile(file, path, filename, setUrl) {
+export default function uploadFile(file, path, setUrl) {
   let fileExt = file.type.substring(
     file.type.lastIndexOf("/") + 1,
     file.type.length
   );
 
-  const storageRef = ref(storage, `${path}/${filename}.${fileExt}`);
+  const storageRef = ref(storage, `${path}.${fileExt}`);
   const uploadTask = uploadBytesResumable(storageRef, file);
 
   uploadTask.on(
