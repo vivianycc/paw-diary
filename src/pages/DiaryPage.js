@@ -43,9 +43,11 @@ const StyledPage = styled.div`
     font-weight: 500;
   }
   .note {
-    padding: 24px 16px;
+    padding: 16px 24px;
     background-color: #fff;
     border-radius: 24px;
+    white-space: pre-wrap;
+    line-height: 1.6;
   }
   .empty-message {
     margin-top: 120px;
@@ -133,8 +135,7 @@ export default function DiaryPage(props) {
         <h1>{`${dayjs(selectedDay).locale("zh-tw").format("MMMD")}日`}</h1>
         <IconButton
           icon={<Calendar />}
-          color="var(--neutral-200)"
-          strokeColor="var(--neutral-700)"
+          variant="secondary"
           onClick={() => setShowModal(true)}
         />
       </div>
@@ -172,6 +173,7 @@ export default function DiaryPage(props) {
                 state: {
                   currentPet: currentPet,
                   date: selectedDay,
+                  note: selectedDayData.note,
                 },
               })
             }

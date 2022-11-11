@@ -28,10 +28,10 @@ const StyledPage = styled.div`
 `;
 
 export default function AddNotePage() {
-  const [note, setNote] = useState("");
-  const navigate = useNavigate();
   const { state } = useLocation();
-  const { currentPet, date } = state;
+  const { currentPet, date, note: prevNote } = state;
+  const [note, setNote] = useState(prevNote || "");
+  const navigate = useNavigate();
   const { firestore } = getFirebase();
   const { user } = useAuth();
   const docRef = doc(
