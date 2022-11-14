@@ -36,10 +36,16 @@ const StyledPage = styled.div`
 export default function AddFoodPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { brand, id, currentPet } = state;
-  const [rating, setRating] = useState(0);
+  const {
+    brand,
+    id,
+    currentPet,
+    comment: prevComment,
+    rating: prevRating,
+  } = state;
+  const [rating, setRating] = useState(prevRating || 0);
   const [, setRatingLocked] = useState(false);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState(prevComment || "");
   const { user } = useAuth();
   const { firestore } = getFirebase();
 

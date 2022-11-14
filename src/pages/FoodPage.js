@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link, useOutletContext } from "react-router-dom";
-import { Drawer, Input, Modal, Tabs, Button } from "@geist-ui/core";
+import { Link, useOutletContext, useNavigate } from "react-router-dom";
+import { Drawer, Input, Modal, Tabs, Rating } from "@geist-ui/core";
 import { Search } from "react-feather";
 import { getFirebase } from "../firebase";
 import { onSnapshot, collection } from "firebase/firestore";
@@ -10,6 +10,7 @@ import Nav from "../components/Nav";
 import FoodItem from "../components/FoodItem";
 import ActionButton from "../components/ActionButton";
 import FoodNutrition from "../components/FoodNutrition";
+import Button from "../components/Button";
 
 const StyledFoodPage = styled.div`
   height: 100%;
@@ -29,6 +30,12 @@ const StyledFoodPage = styled.div`
     overflow: scroll;
     padding-bottom: 104px;
   }
+  .rating.food-rating {
+    pointer-events: none;
+    .icon-box {
+      pointer-events: none;
+    }
+  }
 `;
 
 export default function FoodPage() {
@@ -37,17 +44,10 @@ export default function FoodPage() {
   const [showModal, setShowModal] = useState(false);
   const [selectedFood, setSelectedFood] = useState(null);
   const currentPet = useOutletContext();
+
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { firestore } = getFirebase();
-
-  const filteredFood = (foodType) => {
-    return foods.filter((food) => food.food.foodType === foodType);
-  };
-
-  const closeHandler = (event) => {
-    setShowModal(false);
-    setSelectedFood(null);
-  };
 
   useEffect(() => {
     const foodCol = collection(
@@ -67,6 +67,27 @@ export default function FoodPage() {
       unsubscribe();
     };
   }, []);
+
+  const filteredFood = (foodType) => {
+    return foods.filter((food) => food.food.foodType === foodType);
+  };
+
+  const handleClose = (event) => {
+    setShowModal(false);
+    setSelectedFood(null);
+  };
+
+  const handleEdit = (food) => {
+    console.log(currentPet, food);
+    navigate("/foods/add", {
+      state: {
+        ...food.food,
+        currentPet: currentPet,
+        rating: food.rating,
+        comment: food.comment,
+      },
+    });
+  };
 
   const renderFoodItem = (foodData) => {
     return foodData.map((item) => (
@@ -114,13 +135,20 @@ export default function FoodPage() {
       </Tabs>
 
       {selectedFood && (
-        <Modal visible={showModal} onClose={closeHandler}>
+        <Modal visible={showModal} onClose={handleClose}>
           {console.log(selectedFood)}
           <Modal.Subtitle>{selectedFood.food.brand}</Modal.Subtitle>
           <Modal.Title>{selectedFood.food.flavor}</Modal.Title>
           <Modal.Content>
             <FoodNutrition {...selectedFood.food} />
+            <p>{selectedFood.comment}</p>
+            <Rating
+              value={selectedFood.rating}
+              className="food-rating"
+              locked={true}
+            />
           </Modal.Content>
+          <Button label="修改評價" onClick={() => handleEdit(selectedFood)} />
         </Modal>
       )}
 
@@ -134,7 +162,7 @@ export default function FoodPage() {
           <Input icon={<Search />} placeholder="搜尋食物名稱" />
         </Link>
         <Link to="./create">
-          <Button>創建食物</Button>
+          <Button label="創建食物" />
         </Link>
       </Drawer>
       <Nav />

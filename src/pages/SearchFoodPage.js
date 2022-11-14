@@ -84,11 +84,12 @@ export default function FoodSearch(props) {
           key={food.id}
           actionLabel="加入最愛"
           disabled={foodAdded.includes(food.id)}
-          onClick={() =>
+          onClick={() => {
+            console.log(food, currentPet);
             navigate("/foods/add", {
               state: { ...food, currentPet: currentPet },
-            })
-          }
+            });
+          }}
         />
       );
     } else {

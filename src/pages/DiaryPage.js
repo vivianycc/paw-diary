@@ -62,7 +62,7 @@ const StyledPage = styled.div`
 const StyledMenuItem = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
 `;
 
 export default function DiaryPage(props) {
@@ -164,7 +164,7 @@ export default function DiaryPage(props) {
               })
             }
           />
-          <MenuItem icon={<Image />} label="照片" />
+
           <MenuItem
             icon={<BookOpen />}
             label="日記"
@@ -178,7 +178,8 @@ export default function DiaryPage(props) {
               })
             }
           />
-          <MenuItem icon={<TrendingUp />} label="數據" />
+          {/* <MenuItem icon={<Image />} label="照片" />
+          <MenuItem icon={<TrendingUp />} label="數據" /> */}
         </StyledMenuItem>
       </Drawer>
     </StyledPage>
