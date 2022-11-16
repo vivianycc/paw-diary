@@ -6,7 +6,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import SearchResultItem from "../components/SearchResultItem";
 import IconButton from "../components/IconButton";
 import { getFirebase } from "../firebase";
-import { collection, getDoc, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 
@@ -29,7 +29,6 @@ const StyledFoodSearch = styled.div`
 const { firestore } = getFirebase();
 
 export default function FoodSearch(props) {
-  // const foodAdded = props.foods.map((food) => food.food.id);
   const [searchParams, setSearchParams] = useState("");
   const [foodData, setFoodData] = useState([]);
   const [foodAdded, setFoodAdded] = useState([]);
@@ -123,7 +122,7 @@ export default function FoodSearch(props) {
           {console.log("added", foodAdded)}
           <IconButton
             size="40"
-            color="transparent"
+            variant="transparent"
             icon={<ArrowLeft color="var(--neutral-700)" />}
           ></IconButton>
         </Link>

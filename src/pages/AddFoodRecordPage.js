@@ -79,8 +79,7 @@ export default function AddFoodRecordPage() {
     };
 
     const docSnap = await getDoc(diaryDoc);
-
-    if (docSnap.data().foodRecord) {
+    if (docSnap.data()?.foodRecord) {
       dayjs.extend(customParseFormat);
       const prevRecord = docSnap.data().foodRecord;
       const newRecords = [...prevRecord, newRecord].sort((a, b) =>
