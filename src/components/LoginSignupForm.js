@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Input from "./Input";
@@ -8,7 +8,7 @@ import Logotype from "../assets/logotype.svg";
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
   padding: 40px;
   width: 100%;
 
@@ -26,12 +26,16 @@ const StyledForm = styled.form`
 `;
 
 export default function LoginSignupForm({
-  email,
-  password,
-  onChange,
   onSubmit,
   formType = "signup",
+  register,
+  errors,
 }) {
+  // console.log("email ref", emailRef);
+  console.log("errors", errors);
+  const emailPattern =
+    /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
   return (
     <StyledForm onSubmit={onSubmit}>
       <img src={Logotype} alt="logotype" />
@@ -39,17 +43,27 @@ export default function LoginSignupForm({
         label="電子信箱"
         name="email"
         placeholder="請輸入電子信箱"
-        onChange={onChange}
-        value={email}
+        error={errors?.email}
+        {...register("email", {
+          required: true,
+          pattern: { value: emailPattern, message: "信箱格式不正確" },
+        })}
+        variant={errors?.email ? "warning" : "primary"}
       />
+
       <Input
         label="密碼"
         name="password"
-        placeholder="請輸入電子信箱"
+        placeholder="請輸入密碼"
         type="password"
-        onChange={onChange}
-        value={password}
+        error={errors?.password}
+        {...register("password", {
+          required: true,
+          minLength: { value: 6, message: "密碼長度至少 6 個字母或數字" },
+        })}
+        variant={errors?.email ? "warning" : "primary"}
       />
+
       <Button
         type="submit"
         label={formType === "login" ? "登入" : "建立帳號"}

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import styled from "styled-components";
+import { useForm } from "react-hook-form";
 import LoginSignupForm from "../components/LoginSignupForm";
 
 const StyledPage = styled.div`
@@ -11,14 +12,11 @@ const StyledPage = styled.div`
   height: 100vh;
 `;
 
-export default function LoginPage(props) {
+export default function LoginPage() {
   const { login, user } = useAuth();
   const navigate = useNavigate();
   const { state } = useLocation();
-  const [form, setForm] = useState({
-    email: "hello@tale.app",
-    password: "123456",
-  });
+  const { register, handleSubmit, formState } = useForm();
 
   useEffect(() => {
     if (user) {
@@ -26,23 +24,18 @@ export default function LoginPage(props) {
     }
   }, [user]);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    login(form.email, form.password).then(() => navigate(state?.path || "/"));
+  const onSubmit = (data) => {
+    const { email, password } = data;
+    login(email, password).then(() => navigate(state?.path || "/"));
   };
 
   return (
     <StyledPage>
       <LoginSignupForm
         formType="login"
-        email={form.email}
-        password={form.password}
-        onChange={handleChange}
-        onSubmit={handleSubmit}
+        register={register}
+        errors={formState.errors}
+        onSubmit={handleSubmit(onSubmit)}
       />
     </StyledPage>
   );

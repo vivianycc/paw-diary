@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-import LoginSignupForm from "../components/LoginSignupForm";
 import { useAuth } from "../hooks/useAuth";
 import { setDoc, doc } from "firebase/firestore";
 import { getFirebase } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import LoginSignupForm from "../components/LoginSignupForm";
 
 const StyledPage = styled.div`
   display: flex;
@@ -13,39 +14,35 @@ const StyledPage = styled.div`
   height: 100vh;
 `;
 export default function SignUpPage() {
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
-  const { signup } = useAuth();
-
+  const { signup, user } = useAuth();
   const { firestore } = getFirebase();
-
   const navigate = useNavigate();
+  const { register, handleSubmit, formState } = useForm();
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    signup(form.email, form.password)
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
+
+  const onSubmit = (data) => {
+    const { email, password } = data;
+    signup(email, password)
       .then((user) =>
         setDoc(doc(firestore, "users", user.uid), {
           name: user.displayName,
         })
       )
-      .then(() => navigate("/signup/setup"));
+      .then(() => navigate("/pets/create"));
   };
 
   return (
     <StyledPage>
       <LoginSignupForm
         formType="signup"
-        email={form.email}
-        password={form.password}
-        onChange={handleChange}
-        onSubmit={handleSubmit}
+        register={register}
+        errors={formState.errors}
+        onSubmit={handleSubmit(onSubmit)}
       />
     </StyledPage>
   );
