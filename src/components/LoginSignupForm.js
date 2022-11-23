@@ -30,9 +30,9 @@ export default function LoginSignupForm({
   formType = "signup",
   register,
   errors,
+  isValid,
 }) {
   // console.log("email ref", emailRef);
-  console.log("errors", errors);
   const emailPattern =
     /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
@@ -66,6 +66,7 @@ export default function LoginSignupForm({
 
       <Button
         type="submit"
+        variant={isValid ? "primary" : "disabled"}
         label={formType === "login" ? "登入" : "建立帳號"}
       />
       {formType === "login" ? (

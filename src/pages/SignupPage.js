@@ -17,7 +17,11 @@ export default function SignUpPage() {
   const { signup, user } = useAuth();
   const { firestore } = getFirebase();
   const navigate = useNavigate();
-  const { register, handleSubmit, formState } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm();
 
   useEffect(() => {
     if (user) {
@@ -41,7 +45,8 @@ export default function SignUpPage() {
       <LoginSignupForm
         formType="signup"
         register={register}
-        errors={formState.errors}
+        errors={errors}
+        isValid={isValid}
         onSubmit={handleSubmit(onSubmit)}
       />
     </StyledPage>

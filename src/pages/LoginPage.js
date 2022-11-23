@@ -16,7 +16,11 @@ export default function LoginPage() {
   const { login, user } = useAuth();
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { register, handleSubmit, formState } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm();
 
   useEffect(() => {
     if (user) {
@@ -34,7 +38,8 @@ export default function LoginPage() {
       <LoginSignupForm
         formType="login"
         register={register}
-        errors={formState.errors}
+        errors={errors}
+        isValid={isValid}
         onSubmit={handleSubmit(onSubmit)}
       />
     </StyledPage>

@@ -18,6 +18,12 @@ const variantStyles = (theme, variant = "primary") => {
       background: transparent;
       border: 1px solid ${theme.colors.primary};
     `,
+    disabled: css`
+      color: ${theme.colors.onPrimary};
+      background: ${theme.colors.primary};
+      border: 1px solid transparent;
+      opacity: 0.4;
+    `,
   }[variant];
 };
 
