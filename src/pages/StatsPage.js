@@ -27,6 +27,14 @@ const StyledStatsPage = styled.div`
     overflow: scroll;
     padding-bottom: 128px;
   }
+  h1 {
+    display: none;
+  }
+  @media only screen and (min-width: 625px) {
+    h1 {
+      display: block;
+    }
+  }
 `;
 
 export default function StatsPage() {
@@ -114,6 +122,7 @@ export default function StatsPage() {
 
   return (
     <StyledStatsPage className="stats">
+      <h1>統計數據</h1>
       <Tabs initialValue="weight" hideDivider>
         {renderTabItem({ label: "體重", statsType: "weight" })}
         {renderTabItem({

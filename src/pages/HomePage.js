@@ -21,8 +21,10 @@ const StyledPage = styled.div`
   main {
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 24px;
     height: 100%;
+    padding-bottom: 64px;
+    position: relative;
   }
   .pet-area {
     display: flex;
@@ -37,13 +39,29 @@ const StyledPage = styled.div`
     outline: none;
     border: none;
   }
+  .copyright {
+    visibility: hidden;
+  }
 
   @media only screen and (min-width: 625px) {
-    flex-direction: row;
+    flex-direction: row-reverse;
     gap: 24px;
     main {
       flex: 1;
     }
+    aside {
+      height: 100%;
+    }
+    .copyright {
+      visibility: visible;
+      font-size: 12px;
+      color: var(--neutral-500);
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    /* background: #000; */
+    max-width: 1200px;
+    margin: 0 auto;
   }
 `;
 
@@ -119,7 +137,6 @@ export default function HomePage() {
         renderNoPets()
       ) : (
         <>
-          <Nav />
           <main>
             {pathname !== "/profile" && (
               <div className="pet-area">
@@ -140,6 +157,10 @@ export default function HomePage() {
               {renderPets()}
             </Drawer>
           </main>
+          <aside>
+            <Nav />
+            <p className="copyright">Copyright © 2022 Tale App</p>
+          </aside>
         </>
       )}
     </StyledPage>

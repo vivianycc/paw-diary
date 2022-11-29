@@ -24,6 +24,11 @@ const variantStyles = (theme, variant = "primary") => {
       border: 1px solid transparent;
       opacity: 0.4;
     `,
+    warning: css`
+      color: ${theme.colors.warning};
+      background: ${theme.colors.secondary};
+      border: 1px solid transparent;
+    `,
   }[variant];
 };
 

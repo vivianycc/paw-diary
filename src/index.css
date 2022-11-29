@@ -24,6 +24,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--neutral-100);
+}
+
+h1 {
+  margin-bottom: 16px;
 }
 
 code {

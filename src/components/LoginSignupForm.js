@@ -11,9 +11,10 @@ const StyledForm = styled.form`
   gap: 20px;
   padding: 40px;
   width: 100%;
-
+  max-width: 425px;
   img {
-    width: 40vw;
+    width: 60vw;
+    max-width: 200px;
     padding: 24px;
     margin: 0 auto;
   }

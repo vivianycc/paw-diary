@@ -9,7 +9,8 @@ import PetItem from "../components/PetItem";
 
 const StyledPage = styled.div`
   height: 100vh;
-  background-color: var(--neutral-100);
+  margin-top: 56px;
+  position: relative;
   flex: 1;
   .user-info {
     display: flex;
@@ -59,6 +60,11 @@ const StyledPage = styled.div`
       text-align: center;
       color: var(--neutral-500);
     }
+  }
+  .logout-btn {
+    width: 100%;
+    position: absolute;
+    bottom: 16px;
   }
 `;
 
@@ -117,7 +123,12 @@ export default function ProfilePage() {
           ))
         )}
       </div>
-      <Button onClick={handleLogout} label="Log Out" />
+      <Button
+        onClick={handleLogout}
+        label="登出"
+        variant="warning"
+        className="logout-btn"
+      />
     </StyledPage>
   );
 }

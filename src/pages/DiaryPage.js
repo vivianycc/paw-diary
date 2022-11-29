@@ -20,7 +20,6 @@ const StyledPage = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding-top: 24px;
   .header {
     display: flex;
     align-items: center;

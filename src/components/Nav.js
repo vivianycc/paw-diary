@@ -15,12 +15,12 @@ const StyledNav = styled.nav`
     display: flex;
     height: 64px;
     background-color: var(--neutral-200);
+    padding: 8px;
   }
   li {
     width: 100%;
     height: 100%;
     list-style-type: none;
-    padding: 8px 16px;
   }
   li:first-of-type {
     display: none;
@@ -44,8 +44,10 @@ const StyledNav = styled.nav`
   }
 
   @media only screen and (min-width: 625px) {
-    min-width: 30%;
-    margin: auto;
+    min-width: 25%;
+    height: 100%;
+    margin: 0;
+
     position: relative;
     bottom: 0;
     ul {
@@ -53,6 +55,7 @@ const StyledNav = styled.nav`
       justify-content: center;
       align-items: flex-start;
       height: 100%;
+      /* margin-left: 8%; */
       background-color: transparent;
       li {
         height: auto;

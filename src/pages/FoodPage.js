@@ -14,7 +14,6 @@ import Button from "../components/Button";
 
 const StyledFoodPage = styled.div`
   height: 100%;
-  padding-top: 24px;
   .items {
     height: 100%;
     padding-bottom: 128px;
