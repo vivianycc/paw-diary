@@ -50,7 +50,7 @@ const StyledPet = styled.button`
 
 export default function petItem({ pet, onClick, className, bg, action }) {
   const {
-    name,
+    name = "no name",
     species,
     weight,
     birthday,

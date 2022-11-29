@@ -14,7 +14,19 @@ import StatsItem from "../components/StatsItem";
 import SegmentedControl from "../components/SegmentedControl";
 
 const StyledStatsPage = styled.div`
-  padding-top: 32px;
+  flex: 1;
+  min-height: 0;
+  .tabs {
+    height: 100% !important;
+  }
+
+  .tabs .content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: scroll;
+    padding-bottom: 128px;
+  }
 `;
 
 export default function StatsPage() {
@@ -101,7 +113,7 @@ export default function StatsPage() {
   };
 
   return (
-    <StyledStatsPage>
+    <StyledStatsPage className="stats">
       <Tabs initialValue="weight" hideDivider>
         {renderTabItem({ label: "體重", statsType: "weight" })}
         {renderTabItem({

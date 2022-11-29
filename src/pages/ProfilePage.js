@@ -9,8 +9,8 @@ import PetItem from "../components/PetItem";
 
 const StyledPage = styled.div`
   height: 100vh;
-  padding: 72px 24px 0;
   background-color: var(--neutral-100);
+  flex: 1;
   .user-info {
     display: flex;
     flex-direction: column;
@@ -117,7 +117,6 @@ export default function ProfilePage() {
           ))
         )}
       </div>
-      <Nav />
       <Button onClick={handleLogout} label="Log Out" />
     </StyledPage>
   );

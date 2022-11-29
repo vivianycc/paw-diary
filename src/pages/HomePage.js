@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Nav from "../components/Nav";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import { Avatar, Drawer } from "@geist-ui/core";
 import PetItem from "../components/PetItem";
 import { usePets } from "../hooks/usePets";
@@ -12,11 +12,18 @@ import { useEffect } from "react";
 const StyledPage = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   height: 100vh;
   padding: 32px;
   overflow: hidden;
   background-color: var(--neutral-100);
 
+  main {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    height: 100%;
+  }
   .pet-area {
     display: flex;
     align-items: center;
@@ -29,6 +36,14 @@ const StyledPage = styled.div`
     cursor: pointer;
     outline: none;
     border: none;
+  }
+
+  @media only screen and (min-width: 625px) {
+    flex-direction: row;
+    gap: 24px;
+    main {
+      flex: 1;
+    }
   }
 `;
 
@@ -59,6 +74,7 @@ export default function HomePage() {
   const { user } = useAuth();
   const { pets } = usePets(user.uid);
   const { setCurrentPet, currentPet } = useCurrentPet();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     if (pets && currentPet === "") {
@@ -87,39 +103,43 @@ export default function HomePage() {
   const renderNoPets = () => {
     return (
       <div>
-        尚未建立寵物資料，前往 <Link to="/profile">個人頁建立寵物</Link>
+        尚未建立寵物資料，前往 <Link to="/pets/create">建立寵物</Link>
       </div>
     );
   };
   const Loading = () => {
     return <div>Loading...</div>;
   };
-  if (pets === null || currentPet === "") {
+  if (pets === null || pets === undefined || currentPet === "") {
     return <Loading />;
   }
   return (
-    <StyledPage>
+    <StyledPage className="home">
       {pets !== null && Object.keys(pets).length === 0 ? (
         renderNoPets()
       ) : (
         <>
-          <div className="pet-area">
-            <PetItem pet={pets[currentPet]} className="current-pet" />
-            <PetMenu
-              currentPet={currentPet}
-              pets={pets}
-              onClick={() => setShowDrawer(true)}
-            />
-          </div>
           <Nav />
-          <Outlet context={currentPet} />
-          <Drawer
-            visible={showDrawer}
-            onClose={() => setShowDrawer(false)}
-            placement="bottom"
-          >
-            {renderPets()}
-          </Drawer>
+          <main>
+            {pathname !== "/profile" && (
+              <div className="pet-area">
+                <PetItem pet={pets[currentPet]} className="current-pet" />
+                <PetMenu
+                  currentPet={currentPet}
+                  pets={pets}
+                  onClick={() => setShowDrawer(true)}
+                />
+              </div>
+            )}
+            <Outlet context={currentPet} className="outlet" />
+            <Drawer
+              visible={showDrawer}
+              onClose={() => setShowDrawer(false)}
+              placement="bottom"
+            >
+              {renderPets()}
+            </Drawer>
+          </main>
         </>
       )}
     </StyledPage>

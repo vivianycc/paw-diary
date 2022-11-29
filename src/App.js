@@ -118,15 +118,16 @@ function App() {
               <Route index element={<DiaryPage diaries={diaries} />} />
               <Route path="foods" element={<FoodPage foods={foods} />} />
               <Route path="stats" element={<StatsPage />} />
+              <Route
+                path="profile"
+                element={
+                  <RequireAuth>
+                    <ProfilePage />
+                  </RequireAuth>
+                }
+              />
             </Route>
-            <Route
-              path="profile"
-              element={
-                <RequireAuth>
-                  <ProfilePage />
-                </RequireAuth>
-              }
-            />
+
             <Route path="foods/create" element={<CreateFoodPage />} />
             <Route
               path="foods/records/add"
