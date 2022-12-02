@@ -102,8 +102,8 @@ export default function AddFoodRecordPage() {
 
   return (
     <StyledPage>
-      <h1>加入以下紀錄</h1>
       <form onSubmit={handleSubmit}>
+        <h1>加入以下紀錄</h1>
         <FoodRecordItem
           info={{
             foodBrand: brand,

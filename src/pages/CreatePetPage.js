@@ -12,6 +12,8 @@ const StyledPage = styled.div`
   display: flex;
   align-items: center;
   height: 100vh;
+  max-width: 450px;
+  margin: 0 auto;
   padding: 32px;
   h1 {
     margin-bottom: 80px;
@@ -114,7 +116,6 @@ const Step2 = ({ handleFile, uploadFile, photoUrl }) => {
       >
         upload photo
       </div>
-      <button onClick={uploadFile}>UPload</button>
     </>
   );
 };

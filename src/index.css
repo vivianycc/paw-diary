@@ -30,7 +30,10 @@ body {
 h1 {
   margin-bottom: 16px;
 }
-
+form {
+  max-width: 625px;
+  margin: 0 auto;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

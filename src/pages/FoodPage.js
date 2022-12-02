@@ -68,6 +68,7 @@ export default function FoodPage() {
   }, []);
 
   const filteredFood = (foodType) => {
+    console.log(foodType);
     return foods.filter((food) => food.food.foodType === foodType);
   };
 
