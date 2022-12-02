@@ -37,7 +37,26 @@ export default function SignUpPage() {
           name: user.displayName,
         })
       )
-      .then(() => navigate("/pets/create"));
+      .then(() => navigate("/pets/create"))
+      .catch((error) => {
+        switch (error.code) {
+          case "auth/invalid-password":
+            alert("密碼至少 6 個字元");
+            break;
+          case "auth/invalid-email":
+            alert("信箱格式不正確");
+            break;
+
+          case "auth/email-already-in-use":
+            alert("信箱已有人使用");
+            break;
+          // Many more authCode mapping here...
+
+          default:
+            alert(error.message);
+            return "";
+        }
+      });
   };
 
   return (

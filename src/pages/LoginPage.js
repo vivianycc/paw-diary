@@ -30,7 +30,29 @@ export default function LoginPage() {
 
   const onSubmit = (data) => {
     const { email, password } = data;
-    login(email, password).then(() => navigate(state?.path || "/"));
+    login(email, password)
+      .then(() => navigate(state?.path || "/"))
+      .catch((error) => {
+        switch (error.code) {
+          case "auth/wrong-password":
+            alert("密碼錯誤");
+            break;
+          case "auth/user-not-found":
+            alert("使用者不存在");
+            break;
+          case "auth/invalid-password":
+            alert("Password must be at least 6 characters");
+            break;
+          case "auth/invalid-email":
+            return "Email provided is invalid";
+
+          // Many more authCode mapping here...
+
+          default:
+            alert(error.message);
+            return "";
+        }
+      });
   };
 
   return (
