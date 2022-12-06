@@ -92,13 +92,14 @@ export default function HomePage() {
   const { user } = useAuth();
   const { pets } = usePets(user.uid);
   const { setCurrentPet, currentPet } = useCurrentPet();
+  console.log(currentPet);
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (pets && currentPet === "") {
+    if (pets && !currentPet) {
       setCurrentPet(Object.keys(pets)[0]);
     }
-  }, [pets]);
+  }, [pets, currentPet]);
 
   const handleCurrentPet = (pet) => {
     setCurrentPet(pet);
@@ -128,7 +129,7 @@ export default function HomePage() {
   const Loading = () => {
     return <div>Loading...</div>;
   };
-  if (pets === null || pets === undefined || currentPet === "") {
+  if (pets === null || pets === undefined || !currentPet) {
     return <Loading />;
   }
   return (

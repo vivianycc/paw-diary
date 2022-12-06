@@ -48,14 +48,20 @@ const StyledPet = styled.button`
   }
 `;
 
-export default function petItem({ pet, onClick, className, bg, action }) {
-  const {
+export default function petItem({
+  pet: {
     name = "no name",
     species,
     weight,
     birthday,
     photoUrl = "http://placekitten.com/100/100",
-  } = pet;
+  },
+  onClick,
+  className,
+  bg,
+  action,
+}) {
+  console.log(name);
 
   const speciesName = {
     cat: "貓",
@@ -77,7 +83,7 @@ export default function petItem({ pet, onClick, className, bg, action }) {
     <StyledPet onClick={onClick} className={className} bg={bg}>
       <Avatar src={photoUrl} className="pet-avatar" />
       <div className="pet-content">
-        <span className="pet-name">{name}</span>
+        {name && <span className="pet-name">{name}</span>}
         <span className="pet-info">
           <span>{speciesName[species]}</span>
           {birthday && <span>{displayAge(birthday)}</span>}
