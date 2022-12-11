@@ -3,11 +3,13 @@ import IconButton from "./IconButton";
 import { Plus } from "react-feather";
 
 const StyledIconButton = styled(IconButton)`
-  position: absolute;
+  position: fixed;
   bottom: 104px;
-  right: 0;
+  right: 32px;
 
   @media only screen and (min-width: 625px) {
+    position: absolute;
+    right: 0;
     bottom: 32px;
   }
 `;
