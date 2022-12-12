@@ -14,6 +14,7 @@ const StyledPage = styled.div`
   flex-direction: column;
   align-items: stretch;
   height: 100vh;
+  min-height: -webkit-fill-available;
   padding: 32px;
   overflow: hidden;
   background-color: var(--neutral-100);
